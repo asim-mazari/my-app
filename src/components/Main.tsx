@@ -7,7 +7,6 @@ import { Box, ThemeProvider, createTheme } from "@mui/material";
 const Main: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [showServices, setShowServices] = useState(false);
-  const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
   const handleDrawerToggle = () => {
     setOpen(!open);

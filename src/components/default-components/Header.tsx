@@ -1,12 +1,10 @@
 import React from "react";
 import { AppBar, Toolbar, IconButton, Typography } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
-
 interface AppBarProps {
   open: boolean;
   handleDrawerToggle: () => void;
 }
-
 const CustomAppBar: React.FC<AppBarProps> = ({ open, handleDrawerToggle }) => {
   return (
     <AppBar

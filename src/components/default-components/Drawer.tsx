@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Drawer,
   Toolbar,
@@ -9,9 +9,8 @@ import {
   ListItemText,
 } from "@mui/material";
 import {
-  Inbox as InboxIcon,
-  Mail as MailIcon,
   Settings as ServiceIcon,
+  Person as PersonIcon
 } from "@mui/icons-material";
 
 interface DrawerProps {
@@ -67,7 +66,7 @@ const CustomDrawer: React.FC<DrawerProps> = ({
             onClick={handleCompanyInfoClick}
           >
             <ListItemIcon>
-              <ServiceIcon />
+              <PersonIcon />
             </ListItemIcon>
             <ListItemText primary="Company Information" />
           </ListItem>

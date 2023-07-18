@@ -1,21 +1,47 @@
 import React from "react";
 import { Box, Paper, Typography, TextField } from "@mui/material";
+import Field from "./Field";
 
 interface ContactBoxProps {
   fields: Field[];
   setFields: React.Dispatch<React.SetStateAction<Field[]>>;
 }
-interface Field {
-  id: number;
-  label: string;
-  fullName: string;
-  mobile: string;
-  email: string;
-  error?: boolean; // Add the error property
-}
+
 function ContactBox({ fields, setFields }: ContactBoxProps) {
+  const handleFieldChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: Field
+  ) => {
+    const { name, value } = e.target;
+    const updatedFields = fields.map((f) => {
+      if (f.id === field.id) {
+        return {
+          ...f,
+          [name]: value,
+        };
+      }
+      return f;
+    });
+    setFields(updatedFields);
+  };
+
+  const validateFields = () => {
+    const updatedFields = fields.map((field) => {
+      const { fullName, mobile, email } = field;
+      const isFullNameEmpty = fullName.trim() === "";
+      const isMobileEmpty = mobile.trim() === "";
+      const isEmailEmpty = email.trim() === "";
+
+      return {
+        ...field,
+        error: isFullNameEmpty || isMobileEmpty || isEmailEmpty,
+      };
+    });
+    setFields(updatedFields);
+  };
+
   return (
-    <Box sx={{ marginLeft: "26%" }}>
+    <Box sx={{ marginLeft: "26%" }} component="form">
       {fields.map((field) => (
         <Paper
           elevation={3}
@@ -31,17 +57,19 @@ function ContactBox({ fields, setFields }: ContactBoxProps) {
             fullWidth
             required
             value={field.fullName}
-            error={field.error} // Add error prop
-            onChange={(e) => {
-              const updatedFields = fields.map((f) => {
-                if (f.id === field.id) {
-                  return { ...f, fullName: e.target.value, error: false }; // Reset error when typing
-                }
-                return f;
-              });
-              setFields(updatedFields);
-            }}
+            error={field.error && field.fullName.trim() === ""}
+            helperText={
+              field.error && field.fullName.trim() === ""
+                ? "Full Name is required"
+                : ""
+            }
+            name="fullName"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleFieldChange(e, field)
+            }
             sx={{ marginBottom: "20px" }}
+            onBlur={validateFields} // Validate fields on blur
+            onKeyUp={validateFields} // Validate fields on keyup
           />
           <TextField
             label="Mobile"
@@ -49,17 +77,19 @@ function ContactBox({ fields, setFields }: ContactBoxProps) {
             required
             fullWidth
             value={field.mobile}
-            error={field.error} // Add error prop
-            onChange={(e) => {
-              const updatedFields = fields.map((f) => {
-                if (f.id === field.id) {
-                  return { ...f, mobile: e.target.value, error: false }; // Reset error when typing
-                }
-                return f;
-              });
-              setFields(updatedFields);
-            }}
+            error={field.error && field.mobile.trim() === ""}
+            helperText={
+              field.error && field.mobile.trim() === ""
+                ? "Mobile is required"
+                : ""
+            }
+            name="mobile"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleFieldChange(e, field)
+            }
             sx={{ marginBottom: "20px" }}
+            onBlur={validateFields} // Validate fields on blur
+            onKeyUp={validateFields} // Validate fields on keyup
           />
           <TextField
             label="Email"
@@ -67,31 +97,24 @@ function ContactBox({ fields, setFields }: ContactBoxProps) {
             required
             fullWidth
             value={field.email}
-            error={field.error} // Add error prop
-            onChange={(e) => {
-              const updatedFields = fields.map((f) => {
-                if (f.id === field.id) {
-                  return { ...f, email: e.target.value, error: false }; // Reset error when typing
-                }
-                return f;
-              });
-              setFields(updatedFields);
-            }}
+            error={field.error && field.email.trim() === ""}
+            helperText={
+              field.error && field.email.trim() === ""
+                ? "Email is required"
+                : ""
+            }
+            name="email"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleFieldChange(e, field)
+            }
             sx={{ marginBottom: "20px" }}
+            onBlur={validateFields} // Validate fields on blur
+            onKeyUp={validateFields} // Validate fields on keyup
           />
           <TextField
             label="Address"
             variant="outlined"
             fullWidth
-            onChange={(e) => {
-              const updatedFields = fields.map((f) => {
-                if (f.id === field.id) {
-                  return { ...f, address: e.target.value };
-                }
-                return f;
-              });
-              setFields(updatedFields);
-            }}
             sx={{ marginBottom: "20px" }}
           />
         </Paper>
@@ -99,4 +122,5 @@ function ContactBox({ fields, setFields }: ContactBoxProps) {
     </Box>
   );
 }
+
 export default ContactBox;

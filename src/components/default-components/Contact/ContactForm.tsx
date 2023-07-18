@@ -1,15 +1,7 @@
 import React, { useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import ContactBox from "./ContactBox";
-
-interface Field {
-  id: number;
-  label: string;
-  fullName: string;
-  mobile: string;
-  email: string;
-}
-
+import Field from "./Field";
 function ContactForm() {
   const [fields, setFields] = useState<Field[]>([
     {
@@ -20,8 +12,15 @@ function ContactForm() {
       email: "",
     },
   ]);
-
   const handleAddField = () => {
+    let label;
+    if (fields.length === 1) {
+      label = "secondary";
+    } else if (fields.length === 2) {
+      label = "third";
+    } else {
+      label = "Additional info";
+    }
     const isFormValid = fields.every((field) => {
       return (
         field.fullName.trim() !== "" &&
@@ -29,11 +28,10 @@ function ContactForm() {
         field.email.trim() !== ""
       );
     });
-
     if (isFormValid) {
       const newField: Field = {
         id: fields.length + 1,
-        label: "Additional info",
+        label: label,
         fullName: "",
         mobile: "",
         email: "",
