@@ -4,6 +4,7 @@ interface Field {
     fullName: string;
     mobile: string;
     email: string;
+    address:string
     error?: boolean;
   }
   

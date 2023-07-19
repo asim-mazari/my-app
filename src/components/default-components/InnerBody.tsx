@@ -22,6 +22,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
       fullName: "",
       mobile: "",
       email: "",
+      address:""
     },
   ]);
 

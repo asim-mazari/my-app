@@ -65,6 +65,9 @@ const CustomDrawer: React.FC<DrawerProps> = ({
             disablePadding
             onClick={handleCompanyInfoClick}
           >
+
+
+            
             <ListItemIcon>
               <PersonIcon />
             </ListItemIcon>
