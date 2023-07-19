@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Box, Toolbar} from "@mui/material";
+import { Box, Toolbar } from "@mui/material";
 import OurServices from "./OurServices";
 import ShowServices from "./ShowServices";
 import ContactForm from "./Contact/ContactForm";
+import Field from "./Contact/Field";
 
 interface ContentContainerProps {
   open: boolean;
@@ -14,6 +15,15 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
   showServices,
 }) => {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [fields, setFields] = useState<Field[]>([
+    {
+      id: 1,
+      label: "primary",
+      fullName: "",
+      mobile: "",
+      email: "",
+    },
+  ]);
 
   const handleSelectedServicesChange = (services: string[]) => {
     setSelectedServices(services);
@@ -40,7 +50,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
           <ShowServices selectedServices={selectedServices} />
         </>
       ) : (
-        <ContactForm />
+        <ContactForm fields={fields} setFields={setFields} />
       )}
     </Box>
   );
