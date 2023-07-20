@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { Box, Paper, Typography, TextField, Button, Grid } from "@mui/material";
 import Field from "./Field";
+import {useSelector} from "react-redux"
+
 
 interface ContactBoxProps {
   fields: Field[];
@@ -9,6 +11,10 @@ interface ContactBoxProps {
 }
 
 function ContactBox({ fields, setFields, formik }: ContactBoxProps) {
+ 
+
+
+  
   const handleFieldChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     field: Field
@@ -43,7 +49,7 @@ function ContactBox({ fields, setFields, formik }: ContactBoxProps) {
               variant="outlined"
               fullWidth
               name="fullName"
-              key={index}
+              
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 formik.handleChange(e);
                 handleFieldChange(e, field);
@@ -63,7 +69,7 @@ function ContactBox({ fields, setFields, formik }: ContactBoxProps) {
               fullWidth
               name="mobile"
               type="tel"
-              key={index}
+            
               inputProps={{ pattern: "[0-9]*" }}
               value={field.mobile}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,7 +99,7 @@ function ContactBox({ fields, setFields, formik }: ContactBoxProps) {
               variant="outlined"
               fullWidth
               name="email"
-              key={index}
+        
               value={field.email}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 formik.handleChange(e);
@@ -114,7 +120,7 @@ function ContactBox({ fields, setFields, formik }: ContactBoxProps) {
               fullWidth
               name="address"
               value={field.address}
-              key={index}
+              
               
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 formik.handleChange(e);

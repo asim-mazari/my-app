@@ -5,7 +5,9 @@ import Field from "./Field";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import ContactData from "./ContactData";
+import { useDispatch } from "react-redux";
 
+import { userClice } from "../../../Store/ContactClice";
 const validationSchema = Yup.object().shape({
   fullName: Yup.string().required("Full Name is required"),
   mobile: Yup.string().required("Mobile is required"),
@@ -19,15 +21,14 @@ interface ContactFormProps {
 }
 
 function ContactForm({ fields, setFields }: ContactFormProps) {
-
-  const [showTable, setShowTable] = useState(false);
+  const dispatch = useDispatch();
+  const { addContact } = userClice.actions;
   const formik = useFormik({
     initialValues: {
       fullName: "",
       mobile: "",
       email: "",
-      address:""
-      
+      address: "",
     },
     validationSchema,
     onSubmit: (values) => {
@@ -40,8 +41,8 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
       return (
         field.fullName.trim() !== "" &&
         field.mobile.trim() !== "" &&
-        field.email.trim() !== ""&&
-        field.address.trim() !==""
+        field.email.trim() !== "" &&
+        field.address.trim() !== ""
       );
     });
     if (isFieldsValid && formik.isValid) {
@@ -60,7 +61,7 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
         fullName: "",
         mobile: "",
         email: "",
-        address:""
+        address: "",
       };
 
       setFields([...fields, newField]);
@@ -68,7 +69,9 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
   };
 
   function formdata() {
-    setShowTable(true);
+    fields.map((data) => {
+      dispatch(addContact(data));
+    });
   }
 
   return (
@@ -76,23 +79,25 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
       <Box>
         <Typography variant="h5">Personal Info</Typography>
       </Box>
-      <Grid  display="flex" justifyContent="space-between" sx={{width:'100%'}}>
-        {showTable && <ContactData fields={fields} setFields={setFields}></ContactData>}
-      <ContactBox fields={fields} setFields={setFields} formik={formik} />
+      <Grid
+        display="flex"
+        justifyContent="space-between"
+        sx={{ width: "100%" }}
+      >
+        <ContactData></ContactData>
+        <ContactBox fields={fields} setFields={setFields} formik={formik} />
       </Grid>
-      
-
       <Box
         sx={{
-          width: "460px",
+          width: "70%",
           padding: "20px",
           marginBottom: "20px",
-          marginLeft: "26%",
+          
         }}
       >
         <Grid container display="flex" justifyContent="space-between">
           <Button variant="outlined" onClick={formdata}>
-            GET FORM DATA
+            Submit
           </Button>
 
           <Button variant="outlined" onClick={handleAddField}>
