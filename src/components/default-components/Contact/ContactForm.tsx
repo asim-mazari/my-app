@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, Button, Grid } from "@mui/material";
 import ContactBox from "./ContactBox";
 import Field from "./Field";
@@ -6,8 +6,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import ContactData from "./ContactData";
 import { useDispatch } from "react-redux";
+import { addContact, editContact } from "../../../Store/ContactClice";
+import { useSelector } from "react-redux";
 
-import { userClice } from "../../../Store/ContactClice";
 const validationSchema = Yup.object().shape({
   fullName: Yup.string().required("Full Name is required"),
   mobile: Yup.string().required("Mobile is required"),
@@ -15,14 +16,15 @@ const validationSchema = Yup.object().shape({
     .email("Invalid email address")
     .required("Email is required"),
 });
+
 interface ContactFormProps {
   fields: Field[];
   setFields: React.Dispatch<React.SetStateAction<Field[]>>;
 }
 
 function ContactForm({ fields, setFields }: ContactFormProps) {
+  const [FormIndex, setFormIndex] = useState<string>("Initial Value");
   const dispatch = useDispatch();
-  const { addContact } = userClice.actions;
   const formik = useFormik({
     initialValues: {
       fullName: "",
@@ -68,11 +70,44 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
     }
   };
 
+  const contacts = useSelector((state: any) => {
+    return state.users;
+  });
+  console.log(contacts)
+
   function formdata() {
-    fields.map((data) => {
-      dispatch(addContact(data));
+
+    fields.forEach((data) => {
+      if (
+        data.fullName.trim() !== "" &&
+        data.mobile.trim() !== "" &&
+        data.email.trim() !== ""
+      ) {
+        // Move findContactById inside the formdata function and pass contacts as an argument
+        const existingContact = findContactById(data.id, contacts);
+        console.log("Existing contact:", existingContact); // Check the existing contact in the console
+        if (existingContact) {
+          // If a contact with the same id exists, update it
+          console.log("Editing contact:", data);
+          dispatch(editContact(data)); // Dispatch the action with the updated data
+        } else {
+          // If a contact with the same id doesn't exist, add it
+          console.log("Adding contact:", data);
+          dispatch(addContact(data)); // Assuming you have defined the 'addContact' action in the Redux slice
+        }
+      }
     });
   }
+  function findContactById(id: number, contacts: any[]) {
+ 
+    return contacts.find((contact: any) => contact.id === id);
+  }
+  const [editUserData, setEditUserData] = useState<any>(null);
+
+  // Callback function to handle editing
+  const handleEditUser = (user: any) => {
+    setEditUserData(user);
+  };
 
   return (
     <>
@@ -84,15 +119,21 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
         justifyContent="space-between"
         sx={{ width: "100%" }}
       >
-        <ContactData></ContactData>
-        <ContactBox fields={fields} setFields={setFields} formik={formik} />
+        <ContactData onEdit={handleEditUser}></ContactData>
+        <ContactBox
+          fields={fields}
+          setFields={setFields}
+          formik={formik}
+          editUserData={editUserData}
+
+          onEdit={handleEditUser}
+        />
       </Grid>
       <Box
         sx={{
           width: "70%",
           padding: "20px",
           marginBottom: "20px",
-          
         }}
       >
         <Grid container display="flex" justifyContent="space-between">

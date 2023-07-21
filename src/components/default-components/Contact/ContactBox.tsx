@@ -1,20 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState, useRef } from "react";
 import { Box, Paper, Typography, TextField, Button, Grid } from "@mui/material";
 import Field from "./Field";
 import {useSelector} from "react-redux"
+import { editContact } from "../../../Store/ContactClice";
+
 
 
 interface ContactBoxProps {
   fields: Field[];
   setFields: React.Dispatch<React.SetStateAction<Field[]>>;
   formik: any;
+  editUserData: any; // Add the editUserData prop
+  onEdit: (user: any) => void;
 }
 
-function ContactBox({ fields, setFields, formik }: ContactBoxProps) {
- 
-
-
-  
+function ContactBox({ fields, setFields, formik , editUserData, onEdit }: ContactBoxProps) {  
   const handleFieldChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     field: Field
@@ -32,6 +32,23 @@ function ContactBox({ fields, setFields, formik }: ContactBoxProps) {
     setFields(updatedFields);
   };
 
+
+  const formRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Check if editUserData exists and if the formRef has been set (i.e., the form has been rendered)
+    if (editUserData && formRef.current) {
+      // Scroll to the form with the same ID as the editUserData
+      formRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [editUserData]);
+
+  onEdit(null);
+
+ 
   return (
    <Grid >
     <Grid item>
@@ -40,6 +57,7 @@ function ContactBox({ fields, setFields, formik }: ContactBoxProps) {
             elevation={3}
             sx={{ width: "460px", padding: "20px", marginBottom: "20px" }}
             key={field.id}
+            ref={editUserData?.id === field.id ? formRef : null}
           >
             <Typography variant="h5" sx={{ marginBottom: "20px" }}>
               {field.label}

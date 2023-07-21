@@ -1,12 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { userClice } from "./ContactClice";
+import userReducer from "./ContactClice";
 
-
-const StoreMain=configureStore({
-    reducer:{
-        users: userClice.reducer,
-    },
+const StoreMain = configureStore({
+  reducer: {
+    users: userReducer,
+  },
 });
-
 
 export default StoreMain;
