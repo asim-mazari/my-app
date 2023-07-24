@@ -22,7 +22,8 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
       fullName: "",
       mobile: "",
       email: "",
-      address:""
+      address:"",  
+      selectedCity: "",
     },
   ]);
 
@@ -36,7 +37,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
       sx={{
         flexGrow: 1,
         p: 3,
-        width: open ? `calc(100% - ${240}px)` : "100%",
+        width: open ? `calc(95% - ${240}px)` : "95%",
         marginLeft: open ? `${240}px` : 0,
         transition: "width 0.3s, margin-left 0.3s",
       }}

@@ -124,6 +124,8 @@ function ContactData({ onEdit }: ContactDataProps) {
               <TableCell>Mobile</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Address</TableCell>
+              <TableCell>City</TableCell>
+              <TableCell>Country</TableCell>
               <TableCell>Delete</TableCell> {/* Add delete button column */}
               <TableCell>Edit</TableCell> {/* Add delete button column */}
             </TableRow>
@@ -137,6 +139,8 @@ function ContactData({ onEdit }: ContactDataProps) {
                 <TableCell>{item.mobile}</TableCell>
                 <TableCell>{item.email}</TableCell>
                 <TableCell>{item.address}</TableCell>
+                <TableCell>{item.selectedCity}</TableCell>
+                <TableCell>{item.selectedCountry}</TableCell>
                 <TableCell>
                   {/* Add delete button */}
                   <IconButton

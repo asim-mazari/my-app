@@ -23,7 +23,6 @@ interface ContactFormProps {
 }
 
 function ContactForm({ fields, setFields }: ContactFormProps) {
-  const [FormIndex, setFormIndex] = useState<string>("Initial Value");
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
@@ -64,6 +63,7 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
         mobile: "",
         email: "",
         address: "",
+        selectedCity: "",
       };
 
       setFields([...fields, newField]);
@@ -73,33 +73,38 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
   const contacts = useSelector((state: any) => {
     return state.users;
   });
-  console.log(contacts)
+  console.log(contacts);
 
   function formdata() {
-
     fields.forEach((data) => {
       if (
         data.fullName.trim() !== "" &&
         data.mobile.trim() !== "" &&
-        data.email.trim() !== ""
+        data.email.trim() !== "" &&
+        data.selectedCountry?.trim() !== "" &&
+        data.selectedCity?.trim() !== ""
       ) {
         // Move findContactById inside the formdata function and pass contacts as an argument
         const existingContact = findContactById(data.id, contacts);
         console.log("Existing contact:", existingContact); // Check the existing contact in the console
-        if (existingContact) {
-          // If a contact with the same id exists, update it
-          console.log("Editing contact:", data);
-          dispatch(editContact(data)); // Dispatch the action with the updated data
+
+        // Check if both selectedCountry and selectedCity are not empty
+        if (data.selectedCountry && data.selectedCity) {
+          if (existingContact) {
+            // If a contact with the same id exists, update it
+            dispatch(editContact(data)); // Dispatch the action with the updated data
+          } else {
+            // If a contact with the same id doesn't exist, add it
+            dispatch(addContact(data)); // Assuming you have defined the 'addContact' action in the Redux slice
+          }
         } else {
-          // If a contact with the same id doesn't exist, add it
-          console.log("Adding contact:", data);
-          dispatch(addContact(data)); // Assuming you have defined the 'addContact' action in the Redux slice
+          console.log("Selected country or city is empty, skipping...");
         }
       }
     });
   }
+
   function findContactById(id: number, contacts: any[]) {
- 
     return contacts.find((contact: any) => contact.id === id);
   }
   const [editUserData, setEditUserData] = useState<any>(null);
@@ -125,7 +130,6 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
           setFields={setFields}
           formik={formik}
           editUserData={editUserData}
-
           onEdit={handleEditUser}
         />
       </Grid>

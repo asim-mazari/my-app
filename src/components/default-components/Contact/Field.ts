@@ -1,12 +1,16 @@
 interface Field {
-    id: number;
-    label: string;
-    fullName: string;
-    mobile: string;
-    email: string;
-    address:string
-    error?: boolean;
-  }
+  id: number;
+  label: string;
+  fullName: string;
+  mobile: string;
+  email: string;
+  address: string;
+  selectedCountry?: string;
+  selectedCity: string; // Add selectedCity property
+
   
-  export default Field;
-  
+
+  error?: boolean;
+}
+
+export default Field;
