@@ -37,7 +37,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
       sx={{
         flexGrow: 1,
         p: 3,
-        width: open ? `calc(95% - ${240}px)` : "95%",
+        width: open ? `calc(90% - ${240}px)` : "90%",
         marginLeft: open ? `${240}px` : 0,
         transition: "width 0.3s, margin-left 0.3s",
       }}

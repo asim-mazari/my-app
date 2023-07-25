@@ -63,6 +63,7 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
         mobile: "",
         email: "",
         address: "",
+      
         selectedCity: "",
       };
 
@@ -73,9 +74,8 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
   const contacts = useSelector((state: any) => {
     return state.users;
   });
-  console.log(contacts);
-
   function formdata() {
+    setAddInfo(false);
     fields.forEach((data) => {
       if (
         data.fullName.trim() !== "" &&
@@ -108,7 +108,7 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
     return contacts.find((contact: any) => contact.id === id);
   }
   const [editUserData, setEditUserData] = useState<any>(null);
-
+  const [AddInfo, setAddInfo] = useState(false);
   // Callback function to handle editing
   const handleEditUser = (user: any) => {
     setEditUserData(user);
@@ -117,39 +117,42 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
   return (
     <>
       <Box>
-        <Typography variant="h5">Personal Info</Typography>
-      </Box>
-      <Grid
-        display="flex"
-        justifyContent="space-between"
-        sx={{ width: "100%" }}
-      >
-        <ContactData onEdit={handleEditUser}></ContactData>
-        <ContactBox
-          fields={fields}
-          setFields={setFields}
-          formik={formik}
-          editUserData={editUserData}
-          onEdit={handleEditUser}
-        />
-      </Grid>
-      <Box
-        sx={{
-          width: "70%",
-          padding: "20px",
-          marginBottom: "20px",
-        }}
-      >
-        <Grid container display="flex" justifyContent="space-between">
-          <Button variant="outlined" onClick={formdata}>
-            Submit
-          </Button>
+      <Grid display="flex" justifyContent="space-between">
 
-          <Button variant="outlined" onClick={handleAddField}>
-            Add More
-          </Button>
+        {
+          !AddInfo && (  <ContactData
+            onEdit={handleEditUser}
+            setAddInfo={setAddInfo}
+          ></ContactData>)
+        }
+        {AddInfo && (
+          <ContactBox
+            fields={fields}
+            setFields={setFields}
+            formik={formik}
+            editUserData={editUserData}
+            onEdit={handleEditUser}
+          />
+        )}
+      </Grid>
+
+      <Grid container display="flex" justifyContent="center" width='100%'>
+      {AddInfo && (
+              <Grid sx={{width:'70%'}} display="flex" justifyContent="space-between">
+
+
+                <Button variant="outlined" onClick={formdata}>
+                  Submit
+                </Button>
+                <Button variant="outlined" onClick={handleAddField}>
+                  Add More
+                </Button>
+              </Grid>
+            )}
         </Grid>
       </Box>
+    
+     
     </>
   );
 }

@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import Field from "./Field";
 import cities from "cities.json";
+import CountryList from "../../../Store/CountryList";
 
 interface ContactBoxProps {
   fields: Field[];
@@ -61,32 +62,10 @@ function ContactBox({
 
   onEdit(null);
 
-  const [countries, setCountries] = useState<{ code: string; name: string }[]>(
-    []
-  ); // Add type annotation for countries
+  // State to store the selected country code
 
-  const [selectedCountryCode, setSelectedCountryCode] = useState<string>(""); // State to store the selected country code
-
-  useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        const response = await fetch("https://restcountries.com/v2/all");
-        const data = await response.json();
-        const countriesData = data.map((country: any) => ({
-          code: country.alpha2Code,
-          name: country.name,
-        }));
-        setCountries(countriesData);
-      } catch (error) {
-        console.error("Error fetching countries:", error);
-      }
-    };
-  
-    // Check if the countries are already fetched before making the API call
-    if (countries.length === 0) {
-      fetchCountries();
-    }
-  }, [countries]);
+  const [countries, setCountries] =
+    useState<{ code: string; name: string }[]>(CountryList);
 
   // Function to handle country selection
   const [citiesInCountry, setCitiesInCountry] = useState<{
@@ -97,12 +76,12 @@ function ContactBox({
     field: Field
   ) => {
     const selectedCountryCode = e.target.value;
-    setSelectedCountryCode(selectedCountryCode); // Update the selected country code in the state
 
     // Find the selected country name based on the selected country code
     const selectedCountryName = countries.find(
       (country) => country.code === selectedCountryCode
     )?.name;
+
 
     // Update the selected country name and selected city in the 'field' object
     const updatedFields = fields.map((f) => {
@@ -116,7 +95,6 @@ function ContactBox({
       return f;
     });
     setFields(updatedFields);
-
     // Filter the cities for the selected country and set them for the specific field
     const citiesForCountry = (cities as any[]).filter(
       (city: any) => city.country === selectedCountryCode
@@ -147,14 +125,16 @@ function ContactBox({
     });
     setFields(updatedFields);
   };
+ 
 
   return (
-    <Grid>
-      <Grid item>
-        {fields.map((field, index) => (
+    <Grid display="flex" sx={{ width: "100%" }} justifyContent="center">
+      <Grid item sx={{ width: "80%" }}>
+      {fields.map((field, index) => (
+      
           <Paper
             elevation={3}
-            sx={{ width: "460px", padding: "20px", marginBottom: "20px" }}
+            sx={{ padding: "20px", marginBottom: "20px" }}
             key={field.id}
             ref={editUserData?.id === field.id ? formRef : null}
           >
@@ -164,6 +144,7 @@ function ContactBox({
             <TextField
               label="Full Name"
               variant="outlined"
+              value={field.fullName}
               fullWidth
               name="fullName"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -240,7 +221,6 @@ function ContactBox({
               }}
               sx={{ marginBottom: "20px" }}
             />
-
             <Grid
               container
               display="flex"
@@ -248,32 +228,32 @@ function ContactBox({
               sx={{ width: "100%" }}
             >
               <Grid item>
-                <FormControl sx={{ width: "200px" }}>
+                <FormControl sx={{ width: "300px" }}>
                   <InputLabel id="country-select-label">
                     Select Country
                   </InputLabel>
                   <Select
                     labelId="country-select-label"
                     id="country-select"
-                    value={field.selectedCountry} // You need to have a selectedCountry property in the 'field' object to store the selected country
                     label="Select Country"
+                    value={field.selectedCountry}
                     onChange={(e: any) => handleCountryChange(e, field)} // Create a function to handle country selection
                   >
-                    {countries.map((country) => (
-                      <MenuItem key={country.code} value={country.code}>
-                        {country.name}
+                    {CountryList.map((data) => (
+                      <MenuItem  value={data.code} >
+                        {data.name}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item>
-                <FormControl sx={{ width: "200px" }}>
+                <FormControl sx={{ width: "300px" }}>
                   <InputLabel id="city-select-label">Select City</InputLabel>
                   <Select
                     labelId="city-select-label"
                     id="city-select"
-                    value={field.selectedCity} // You need to have a selectedCity property in the 'field' object to store the selected city
+                    value={field.selectedCity}
                     label="Select City"
                     onChange={(e: any) => handleCityChange(e, field)} // Create a function to handle city selection
                   >
@@ -288,7 +268,6 @@ function ContactBox({
             </Grid>
           </Paper>
         ))}
-
         <Grid></Grid>
       </Grid>
     </Grid>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Drawer,
   Toolbar,
@@ -18,6 +18,7 @@ interface DrawerProps {
   handleDrawerToggle: () => void;
   handleServicesClick: () => void;
   handleCompanyInfoClick: () => void;
+  setSelectedComponent:(user:any)=> void;
 }
 
 const drawerWidth = 240;
@@ -27,7 +28,16 @@ const CustomDrawer: React.FC<DrawerProps> = ({
   handleDrawerToggle,
   handleServicesClick,
   handleCompanyInfoClick,
+  setSelectedComponent
+
 }) => {
+  const [selectedItem, setSelectedItem] = useState<string | null>("Company Information");
+
+  const handleListItemClick = (itemKey: string) => {
+    setSelectedItem(itemKey);
+    setSelectedComponent(itemKey)
+  };
+
   return (
     <>
       <Drawer
@@ -44,14 +54,18 @@ const CustomDrawer: React.FC<DrawerProps> = ({
           },
         }}
       >
-        <Toolbar />
+        <Toolbar ></Toolbar>
         <Divider />
         <List>
           <ListItem
             button
             key="Services"
             disablePadding
-            onClick={handleServicesClick}
+            onClick={() => {
+              handleListItemClick("Services");
+              handleServicesClick();
+            }}
+            sx={{ backgroundColor: selectedItem === "Services" ? "#e0e0e0" : "" }}
           >
             <ListItemIcon>
               <ServiceIcon />
@@ -63,11 +77,12 @@ const CustomDrawer: React.FC<DrawerProps> = ({
             button
             key="Company Information"
             disablePadding
-            onClick={handleCompanyInfoClick}
+            onClick={() => {
+              handleListItemClick("Company Information");
+              handleCompanyInfoClick();
+            }}
+            sx={{ backgroundColor: selectedItem === "Company Information" ? "#e0e0e0" : "" }}
           >
-
-
-            
             <ListItemIcon>
               <PersonIcon />
             </ListItemIcon>

@@ -1,11 +1,18 @@
 import React from "react";
 import { AppBar, Toolbar, IconButton, Typography } from "@mui/material";
-import { Menu as MenuIcon } from "@mui/icons-material";
+import { Menu as MenuIcon, Close as CloseIcon } from "@mui/icons-material";
+
 interface AppBarProps {
   open: boolean;
   handleDrawerToggle: () => void;
+  SelectedComponent: any;
 }
-const CustomAppBar: React.FC<AppBarProps> = ({ open, handleDrawerToggle }) => {
+
+const CustomAppBar: React.FC<AppBarProps> = ({
+  open,
+  handleDrawerToggle,
+  SelectedComponent,
+}) => {
   return (
     <AppBar
       position="fixed"
@@ -21,12 +28,17 @@ const CustomAppBar: React.FC<AppBarProps> = ({ open, handleDrawerToggle }) => {
           aria-label="open drawer"
           edge="start"
           onClick={handleDrawerToggle}
-          sx={{ mr: 2, display: "block" }} // Update the display property to 'block'
+          sx={{
+            mr: 3,
+            display: "block",
+            borderRadius: "48%", // Set the borderRadius to '50%' to create a circular shape
+             // Add a box shadow for the circular effect
+          }}
         >
-          <MenuIcon />
+          {open ? <CloseIcon /> : <MenuIcon />} {/* Use the open prop to conditionally render the appropriate icon */}
         </IconButton>
         <Typography variant="h6" noWrap component="div">
-          my-app Drawer
+          {SelectedComponent}
         </Typography>
       </Toolbar>
     </AppBar>

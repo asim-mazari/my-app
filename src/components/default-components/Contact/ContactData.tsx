@@ -15,6 +15,8 @@ import {
   MenuItem,
   IconButton,
   Paper,
+  Button,
+  Typography
 } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
@@ -22,9 +24,11 @@ import { deleteContact } from "../../../Store/ContactClice";
 import { editContact } from "../../../Store/ContactClice";
 interface ContactDataProps {
   onEdit: (user: any) => void;
+  setAddInfo: React.Dispatch<React.SetStateAction<boolean>>;
+  
 }
 
-function ContactData({ onEdit }: ContactDataProps) {
+function ContactData({ onEdit,setAddInfo  }: ContactDataProps) {
   const data = useSelector((state: any) => {
     return state.users;
   });
@@ -72,13 +76,19 @@ function ContactData({ onEdit }: ContactDataProps) {
 
   const handleEdit = (user: any) => {
     onEdit(user);
+    setAddInfo(true)
   };
+  function AddContactInfo()
+  {
+    setAddInfo(true);
+  }
 
   return (
-    <Paper elevation={3} sx={{ padding: "10px", marginRight: "20px" }}>
-      <Box sx={{ width: "60%" }}>
-        <Grid container display="flex" justifyContent="space-between">
-          <FormControl sx={{ width: "30%" }}>
+    <Grid sx={{width:'100%'}}  display="flex" justifyContent="center">
+       <Paper elevation={3} sx={{ padding: "10px", marginLeft: "20px" ,width:'100%'}}>
+       <Typography variant="h5">Personal Info</Typography>
+        <Grid container display="flex">
+          <FormControl sx={{ width: "20%" }}>
             <InputLabel id="demo-simple-select-label">Sorting</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -95,7 +105,7 @@ function ContactData({ onEdit }: ContactDataProps) {
             </Select>
           </FormControl>
           <Autocomplete
-            sx={{ width: "60%" }}
+            sx={{ width: "30%", marginLeft: "20px", marginRight: "20px" }}
             freeSolo
             id="free-solo-2-demo"
             disableClearable
@@ -114,8 +124,10 @@ function ContactData({ onEdit }: ContactDataProps) {
               />
             )}
           />
+
+          <Button variant="outlined" onClick={AddContactInfo}>Add Info</Button>
         </Grid>
-        <Table>
+        <Table sx={{width:'100%'}}>
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
@@ -167,8 +179,9 @@ function ContactData({ onEdit }: ContactDataProps) {
             ))}
           </TableBody>
         </Table>
-      </Box>
     </Paper>
+    </Grid>
+   
   );
 }
 
