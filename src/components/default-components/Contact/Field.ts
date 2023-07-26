@@ -5,7 +5,7 @@ interface Field {
   mobile: string;
   email: string;
   address: string;
-  selectedCountry?: string;
+  selectedCountry: string;
   selectedCity: string; // Add selectedCity property
 
   

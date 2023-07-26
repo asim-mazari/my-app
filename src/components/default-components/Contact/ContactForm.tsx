@@ -24,6 +24,8 @@ interface ContactFormProps {
 
 function ContactForm({ fields, setFields }: ContactFormProps) {
   const dispatch = useDispatch();
+
+  
   const formik = useFormik({
     initialValues: {
       fullName: "",
@@ -63,7 +65,7 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
         mobile: "",
         email: "",
         address: "",
-      
+        selectedCountry:"",
         selectedCity: "",
       };
 
@@ -75,7 +77,7 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
     return state.users;
   });
   function formdata() {
-    setAddInfo(false);
+    
     fields.forEach((data) => {
       if (
         data.fullName.trim() !== "" &&
@@ -84,6 +86,7 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
         data.selectedCountry?.trim() !== "" &&
         data.selectedCity?.trim() !== ""
       ) {
+  
         // Move findContactById inside the formdata function and pass contacts as an argument
         const existingContact = findContactById(data.id, contacts);
         console.log("Existing contact:", existingContact); // Check the existing contact in the console
@@ -93,9 +96,11 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
           if (existingContact) {
             // If a contact with the same id exists, update it
             dispatch(editContact(data)); // Dispatch the action with the updated data
+            setAddInfo(false);
           } else {
             // If a contact with the same id doesn't exist, add it
             dispatch(addContact(data)); // Assuming you have defined the 'addContact' action in the Redux slice
+                  setAddInfo(false);
           }
         } else {
           console.log("Selected country or city is empty, skipping...");

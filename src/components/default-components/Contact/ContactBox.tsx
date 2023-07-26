@@ -14,6 +14,8 @@ import {
 import Field from "./Field";
 import cities from "cities.json";
 import CountryList from "../../../Store/CountryList";
+import { loadState, saveState } from "./../../../Store/localStorage";
+import { useSelector } from "react-redux";
 
 interface ContactBoxProps {
   fields: Field[];
@@ -23,6 +25,14 @@ interface ContactBoxProps {
   onEdit: (user: any) => void;
 }
 
+interface City {
+  country: string;
+  name: string;
+}
+interface CitiesMap {
+  [key: string]: City[];
+}
+
 function ContactBox({
   fields,
   setFields,
@@ -30,6 +40,26 @@ function ContactBox({
   editUserData,
   onEdit,
 }: ContactBoxProps) {
+  const data = useSelector((state: any) => {
+    return state.users;
+  });
+
+  useEffect(() => {
+    // Map the data objects to Field objects and set the fields state
+    const mappedFields = data.map((d: any) => ({
+      id: d.id,
+      label: d.label,
+      fullName: d.fullName,
+      mobile: d.mobile,
+      email: d.email,
+      address: d.address,
+      selectedCountry: d.selectedCountry,
+      selectedCity: d.selectedCity,
+      // Add other properties as needed
+    }));
+    setFields(mappedFields);
+  }, [data]);
+
   const handleFieldChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     field: Field
@@ -64,43 +94,44 @@ function ContactBox({
 
   // State to store the selected country code
 
-  const [countries, setCountries] =
-    useState<{ code: string; name: string }[]>(CountryList);
-
   // Function to handle country selection
   const [citiesInCountry, setCitiesInCountry] = useState<{
     [key: string]: any[];
   }>({}); // Initialize as an empty object
+
+  useEffect(() => {
+    const initialCities: CitiesMap = {}; // Use the CitiesMap type here
+    fields.forEach((field) => {
+      const citiesForCountry = (cities as City[]).filter(
+        (city) => city.country === field.selectedCountry
+      );
+      initialCities[field.id] = citiesForCountry;
+    });
+    setCitiesInCountry(initialCities);
+  }, []);
+
   const handleCountryChange = (
     e: React.ChangeEvent<{ value: string }>,
     field: Field
   ) => {
     const selectedCountryCode = e.target.value;
 
-    // Find the selected country name based on the selected country code
-    const selectedCountryName = countries.find(
-      (country) => country.code === selectedCountryCode
-    )?.name;
-
-
-    // Update the selected country name and selected city in the 'field' object
     const updatedFields = fields.map((f) => {
       if (f.id === field.id) {
         return {
           ...f,
-          selectedCountry: selectedCountryName || "", // Update the selected country name in the field object
+          selectedCountry: selectedCountryCode,
           selectedCity: "", // Reset the selected city when the country changes
         };
       }
       return f;
     });
     setFields(updatedFields);
-    // Filter the cities for the selected country and set them for the specific field
-    const citiesForCountry = (cities as any[]).filter(
-      (city: any) => city.country === selectedCountryCode
+
+    const citiesForCountry = (cities as City[]).filter(
+      (city) => city.country === selectedCountryCode
     );
 
-    // Use the field's ID as a key to store the cities for each field separately
     setCitiesInCountry((prevCities) => ({
       ...prevCities,
       [field.id]: citiesForCountry,
@@ -125,13 +156,11 @@ function ContactBox({
     });
     setFields(updatedFields);
   };
- 
 
   return (
     <Grid display="flex" sx={{ width: "100%" }} justifyContent="center">
       <Grid item sx={{ width: "80%" }}>
-      {fields.map((field, index) => (
-      
+        {fields.map((field, index) => (
           <Paper
             elevation={3}
             sx={{ padding: "20px", marginBottom: "20px" }}
@@ -240,9 +269,7 @@ function ContactBox({
                     onChange={(e: any) => handleCountryChange(e, field)} // Create a function to handle country selection
                   >
                     {CountryList.map((data) => (
-                      <MenuItem  value={data.code} >
-                        {data.name}
-                      </MenuItem>
+                      <MenuItem value={data.code}>{data.name}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>

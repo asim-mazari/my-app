@@ -16,19 +16,18 @@ import {
   IconButton,
   Paper,
   Button,
-  Typography
+  Typography,
 } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteContact } from "../../../Store/ContactClice";
-import { editContact } from "../../../Store/ContactClice";
+import CountryList from "../../../Store/CountryList";
 interface ContactDataProps {
   onEdit: (user: any) => void;
   setAddInfo: React.Dispatch<React.SetStateAction<boolean>>;
-  
 }
 
-function ContactData({ onEdit,setAddInfo  }: ContactDataProps) {
+function ContactData({ onEdit, setAddInfo }: ContactDataProps) {
   const data = useSelector((state: any) => {
     return state.users;
   });
@@ -76,17 +75,19 @@ function ContactData({ onEdit,setAddInfo  }: ContactDataProps) {
 
   const handleEdit = (user: any) => {
     onEdit(user);
-    setAddInfo(true)
+    setAddInfo(true);
   };
-  function AddContactInfo()
-  {
+  function AddContactInfo() {
     setAddInfo(true);
   }
 
   return (
-    <Grid sx={{width:'100%'}}  display="flex" justifyContent="center">
-       <Paper elevation={3} sx={{ padding: "10px", marginLeft: "20px" ,width:'100%'}}>
-       <Typography variant="h5">Personal Info</Typography>
+    <Grid sx={{ width: "100%" }} display="flex" justifyContent="center">
+      <Paper
+        elevation={3}
+        sx={{ padding: "10px", marginLeft: "20px", width: "100%" }}
+      >
+        <Typography variant="h5">Personal Info</Typography>
         <Grid container display="flex">
           <FormControl sx={{ width: "20%" }}>
             <InputLabel id="demo-simple-select-label">Sorting</InputLabel>
@@ -125,9 +126,11 @@ function ContactData({ onEdit,setAddInfo  }: ContactDataProps) {
             )}
           />
 
-          <Button variant="outlined" onClick={AddContactInfo}>Add Info</Button>
+          <Button variant="outlined" onClick={AddContactInfo}>
+            Add Info
+          </Button>
         </Grid>
-        <Table sx={{width:'100%'}}>
+        <Table sx={{ width: "100%" }}>
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
@@ -152,7 +155,11 @@ function ContactData({ onEdit,setAddInfo  }: ContactDataProps) {
                 <TableCell>{item.email}</TableCell>
                 <TableCell>{item.address}</TableCell>
                 <TableCell>{item.selectedCity}</TableCell>
-                <TableCell>{item.selectedCountry}</TableCell>
+                <TableCell>
+                  {CountryList.find(
+                    (country) => country.code === item.selectedCountry
+                  )?.name || ""}
+                </TableCell>
                 <TableCell>
                   {/* Add delete button */}
                   <IconButton
@@ -179,9 +186,8 @@ function ContactData({ onEdit,setAddInfo  }: ContactDataProps) {
             ))}
           </TableBody>
         </Table>
-    </Paper>
+      </Paper>
     </Grid>
-   
   );
 }
 
