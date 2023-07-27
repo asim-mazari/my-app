@@ -4,15 +4,16 @@ import OurServices from "./OurServices";
 import ShowServices from "./ShowServices";
 import ContactForm from "./Contact/ContactForm";
 import Field from "./Contact/Field";
+import CitiesCheckbox from "./Contact/CitiesCheckbox";
 
 interface ContentContainerProps {
   open: boolean;
-  showServices: boolean;
+  SelectedComponent: any;
 }
 
 const ContentContainer: React.FC<ContentContainerProps> = ({
   open,
-  showServices,
+  SelectedComponent,
 }) => {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [fields, setFields] = useState<Field[]>([
@@ -22,8 +23,8 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
       fullName: "",
       mobile: "",
       email: "",
-      address:"",  
-      selectedCountry:"",
+      address: "",
+      selectedCountry: "",
       selectedCity: "",
     },
   ]);
@@ -44,7 +45,8 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
       }}
     >
       <Toolbar />
-      {showServices ? (
+
+      {SelectedComponent === "Services" ? (
         <>
           <OurServices
             selectedServices={selectedServices}
@@ -52,8 +54,24 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
           />
           <ShowServices selectedServices={selectedServices} />
         </>
-      ) : (
-        <ContactForm fields={fields} setFields={setFields} />
+      ) :
+      
+      SelectedComponent === "Company Information" ? (
+        <>
+          <ContactForm fields={fields} setFields={setFields} />
+        </>
+      ) :
+
+
+      SelectedComponent === "Countries List" ? (
+        <>
+          <CitiesCheckbox  ></CitiesCheckbox>
+        </>
+      ) :
+      
+      
+      (
+        <p>Invalid Component Selection</p>
       )}
     </Box>
   );

@@ -8,6 +8,7 @@ import ContactData from "./ContactData";
 import { useDispatch } from "react-redux";
 import { addContact, editContact } from "../../../Store/ContactClice";
 import { useSelector } from "react-redux";
+import CitiesCheckbox from "./CitiesCheckbox";
 
 const validationSchema = Yup.object().shape({
   fullName: Yup.string().required("Full Name is required"),
@@ -131,13 +132,13 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
           ></ContactData>)
         }
         {AddInfo && (
-          <ContactBox
-            fields={fields}
-            setFields={setFields}
-            formik={formik}
-            editUserData={editUserData}
-            onEdit={handleEditUser}
-          />
+         <ContactBox
+         fields={fields}
+         setFields={setFields}
+         formik={formik}
+         editUserData={editUserData}
+         onEdit={handleEditUser}
+       />
         )}
       </Grid>
 

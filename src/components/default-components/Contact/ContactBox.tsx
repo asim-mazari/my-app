@@ -44,21 +44,68 @@ function ContactBox({
     return state.users;
   });
 
+  const formRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    // Map the data objects to Field objects and set the fields state
-    const mappedFields = data.map((d: any) => ({
-      id: d.id,
-      label: d.label,
-      fullName: d.fullName,
-      mobile: d.mobile,
-      email: d.email,
-      address: d.address,
-      selectedCountry: d.selectedCountry,
-      selectedCity: d.selectedCity,
-      // Add other properties as needed
-    }));
-    setFields(mappedFields);
-  }, [data]);
+    // Check if editUserData exists and if the formRef has been set (i.e., the form has been rendered)
+    if (editUserData && formRef.current) {
+      // Scroll to the form with the same ID as the editUserData
+      formRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [editUserData]);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  const [citiesInCountry, setCitiesInCountry] = useState<{
+    [key: string]: any[];
+  }>({});
+
+  useEffect(() => {
+    // Initialize cities for each field based on the selectedCountry
+    const initialCities: CitiesMap = {};
+    fields.forEach((field) => {
+      const citiesForCountry = (cities as City[]).filter(
+        (city) => city.country === field.selectedCountry
+      );
+      initialCities[field.id] = citiesForCountry;
+    });
+    setCitiesInCountry(initialCities);
+
+    // Check if the fields state is empty
+    if (fields.length === 1 && !isInitialized) {
+      // Map the data objects to Field objects and set the fields state
+      const mappedFields = data.map((d: any) => ({
+        id: d.id,
+        label: d.label,
+        fullName: d.fullName,
+        mobile: d.mobile,
+        email: d.email,
+        address: d.address,
+        selectedCountry: d.selectedCountry,
+        selectedCity: d.selectedCity,
+        // Add other properties as needed
+      }));
+
+      // If the data array is empty, add a new field with id 1 and null values for other properties
+      if (data.length === 0 && fields.length === 1) {
+        mappedFields.push({
+          id: 1,
+          label: "primary",
+          fullName: null,
+          mobile: null,
+          email: null,
+          address: null,
+          selectedCountry: null,
+          selectedCity: null,
+        });
+      }
+
+      setFields(mappedFields);
+      setIsInitialized(true);
+    }
+  }, [data, fields, isInitialized, cities]);
 
   const handleFieldChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -77,27 +124,11 @@ function ContactBox({
     setFields(updatedFields);
   };
 
-  const formRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Check if editUserData exists and if the formRef has been set (i.e., the form has been rendered)
-    if (editUserData && formRef.current) {
-      // Scroll to the form with the same ID as the editUserData
-      formRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  }, [editUserData]);
-
   onEdit(null);
 
   // State to store the selected country code
 
   // Function to handle country selection
-  const [citiesInCountry, setCitiesInCountry] = useState<{
-    [key: string]: any[];
-  }>({}); // Initialize as an empty object
 
   useEffect(() => {
     const initialCities: CitiesMap = {}; // Use the CitiesMap type here
@@ -207,8 +238,9 @@ function ContactBox({
               }}
               onBlur={formik.handleBlur}
               error={
-                (formik.touched.mobile && !!formik.errors.mobile) ||
-                (!!field.mobile && !/^\d*$/.test(field.mobile)) // Check if the value is a string
+                formik.touched.mobile &&
+                !!formik.errors.mobile &&
+                field.mobile.trim() === ""
               }
               helperText={
                 (formik.touched.mobile && formik.errors.mobile) ||

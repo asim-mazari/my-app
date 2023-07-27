@@ -5,21 +5,15 @@ import ContentContainer from "./default-components/InnerBody";
 import { Box, ThemeProvider, createTheme } from "@mui/material";
 
 const Main: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const [showServices, setShowServices] = useState(false);
+  const [open, setOpen] = useState(false)
   const handleDrawerToggle = () => {
     setOpen(!open);
   };
   const [SelectedComponent, setSelectedComponent] = useState("Company Information");
-  const handleServicesClick = () => {
-    setShowServices(true);
-  };
 
+  const [showServices, setShowServices] = useState(1);
+ 
 
-
-  const handleCompanyInfoClick = () => {
-    setShowServices(false);
-  };
 
   const theme = createTheme({
     // Define your theme configurations here
@@ -32,13 +26,9 @@ const Main: React.FC = () => {
         <CustomDrawer
           open={open}
           handleDrawerToggle={handleDrawerToggle}
-          handleServicesClick={handleServicesClick}
-          handleCompanyInfoClick={handleCompanyInfoClick}
           setSelectedComponent={setSelectedComponent}
-         
-
         />
-        <ContentContainer open={open} showServices={showServices} />
+        <ContentContainer open={open} SelectedComponent={SelectedComponent} />
       </Box>
     </ThemeProvider>
   );
