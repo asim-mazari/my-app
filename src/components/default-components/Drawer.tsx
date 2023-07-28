@@ -19,9 +19,7 @@ interface DrawerProps {
   handleDrawerToggle: () => void;
   setSelectedComponent: (user: any) => void;
 }
-
 const drawerWidth = 240;
-
 const CustomDrawer: React.FC<DrawerProps> = ({
   open,
   handleDrawerToggle,
