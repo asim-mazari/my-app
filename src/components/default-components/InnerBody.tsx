@@ -5,7 +5,8 @@ import ShowServices from "./ShowServices";
 import ContactForm from "./Contact/ContactForm";
 import Field from "./Contact/Field";
 import CitiesCheckbox from "./Contact/CitiesCheckbox";
-
+import CountriesAccordion from "./Contact/CountriesAccordion";
+import ManageCities from "./Contact/ManageCities";
 interface ContentContainerProps {
   open: boolean;
   SelectedComponent: any;
@@ -32,6 +33,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
   const handleSelectedServicesChange = (services: string[]) => {
     setSelectedServices(services);
   };
+  const [ManageCity, setManageCity] = useState(false);
 
   return (
     <Box
@@ -65,7 +67,18 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
 
       SelectedComponent === "Countries List" ? (
         <>
-          <CitiesCheckbox  ></CitiesCheckbox>
+           {
+          !ManageCity && (<ManageCities setManageCity={setManageCity} ></ManageCities>  )
+        }
+        {ManageCity && (
+         <CitiesCheckbox setManageCity={setManageCity} ></CitiesCheckbox>
+        )}
+        </>
+      ) :
+      
+      SelectedComponent === "Countries Accordion" ? (
+        <>
+          <CountriesAccordion></CountriesAccordion>
         </>
       ) :
       

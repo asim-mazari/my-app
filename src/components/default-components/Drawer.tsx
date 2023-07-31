@@ -105,6 +105,24 @@ const CustomDrawer: React.FC<DrawerProps> = ({
             </ListItemIcon>
             <ListItemText primary="Countries List" />
           </ListItem>
+
+          <ListItem
+            button
+            key="Countries Accordion"
+            disablePadding
+            onClick={() => {
+              handleListItemClick("Countries Accordion");
+            }}
+            sx={{
+              backgroundColor:
+                selectedItem === "Countries Accordion" ? "#e0e0e0" : "",
+            }}
+          >
+            <ListItemIcon>
+              <WorldIcon />
+            </ListItemIcon>
+            <ListItemText primary="Countries Accordion" />
+          </ListItem>
           {/* ...other list items */}
         </List>
         {/* ...other lists */}

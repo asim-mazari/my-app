@@ -24,6 +24,17 @@ const userSlice = createSlice({
     },
   },
 });
+const CountrySlice = createSlice({
+  name: "Countries",
+  initialState: [] as any[],
+  reducers: {
+    addCountries(state, action) {
+      state.push(action.payload);
+    }
+  },
+});
 
 export const { addContact, deleteContact, editContact } = userSlice.actions;
+export const { addCountries } = CountrySlice.actions;
 export default userSlice.reducer;
+
