@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
+
 import {
   Box,
   Grid,
@@ -21,38 +22,38 @@ import {
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import { useSelector , useDispatch,} from "react-redux";
 import { deleteCountry } from "../../../Store/CountryClice";
+import cities from "cities.json"; // Import the cities list
 
 
 
 interface ManageCities {
     setManageCity: React.Dispatch<React.SetStateAction<boolean>>;
+    setArrayIndex: React.Dispatch<React.SetStateAction<number>>;
   }
 
 // Sample data
-const tableData = [
-  {
-    id: 1,
-    label: "Label 1",
-    fullName: "John Doe",
-    mobile: "1234567890",
-    email: "john.doe@example.com",
-    address: "123 Main St",
-    selectedCity: "City 1",
-    country: "Country 1",
-  },
-  // Add more data objects as needed
-];
+const citiesData = cities as City[];
+interface City {
+  name: string;
+  country: string;
+  // Other properties of a city if any
+}
 
-function ManageCities({ setManageCity }: ManageCities) {
+interface DataItem {
+  code: string; // Country code
+  cities: number[]; // Array of city index IDs
+}
+
+
+function ManageCities({ setManageCity,setArrayIndex }: ManageCities) {
+  const dispatch = useDispatch(); // Move this line here
   const [sorting, setSorting] = useState("id"); // Add state for sorting selection
   // Replace 'countries' with the name of your slice in the Redux store
 
 const data = useSelector((state: any) => {
     return state.countries;
   });
-
-
-  console.log(data)
+console.log(data) 
   const sortData = (data:any) => {
     // Replace this function with your actual sorting logic
     // For now, it returns the data as it is (no sorting)
@@ -64,8 +65,8 @@ const data = useSelector((state: any) => {
     setManageCity(true);
   }
   let counter = 0;
+  
 
-  const dispatch = useDispatch(); // Add the useDispatch hook
 
   // Function to handle delete button click
   function handleDelete(id:any) {
@@ -73,10 +74,13 @@ const data = useSelector((state: any) => {
     dispatch(deleteCountry(id));
   }
 
-  function EditCountry()
+  const  EditCountry = (id:number) => 
   {
     setManageCity(true)
+    setArrayIndex(id)
   }
+
+
   return (
     <Grid sx={{ width: "100%" }} display="flex" justifyContent="center">
       <Paper elevation={3} sx={{ padding: "10px", marginLeft: "20px", width: "100%" }}>
@@ -139,7 +143,7 @@ const data = useSelector((state: any) => {
               </TableCell>
               <TableCell>
                 {/* Add edit button */}
-                <IconButton color="primary" aria-label="edit" onClick={EditCountry}>
+                <IconButton color="primary" aria-label="edit" onClick={() => EditCountry(counter)}>
                   {/* Replace 'EditIcon' with your desired edit icon */}
                   <EditIcon />
                 </IconButton>

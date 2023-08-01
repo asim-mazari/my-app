@@ -14,10 +14,10 @@ const CountrySlice = createSlice({
       }
     },
     editCountry(state, action) {
-      const { id, updatedData } = action.payload;
-      const countryIndex = state.findIndex((country) => country.id === id);
+      const { code, cities: updatedCities } = action.payload;
+      const countryIndex = state.findIndex((country) => country.code === code);
       if (countryIndex !== -1) {
-        state[countryIndex] = { ...state[countryIndex], ...updatedData };
+        state[countryIndex] = { ...state[countryIndex], cities: updatedCities };
       }
     },
   },

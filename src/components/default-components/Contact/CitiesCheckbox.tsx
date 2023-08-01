@@ -6,29 +6,30 @@ import City from "./City";
 import { addCountries } from "../../../Store/ContactClice";
 import { useSelector, useDispatch } from "react-redux";
 
-import { editCountry } from "../../../Store/CountryClice";
+import { editCountry ,deleteCountry} from "../../../Store/CountryClice";
+
 interface ManageCities {
   setManageCity: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-interface CountryData {
-  id: number;
-  countryCode: string;
-  cities: number[];
-}
 function CitiesCheckbox({ setManageCity }: ManageCities) {
-  const [updatedSelectedCities, setUpdatedSelectedCities] = useState<
-    Record<string, Record<number, boolean>>
-  >({});
-
   const dispatch = useDispatch();
-  const [countryData, setCountryData] = useState<CountryData[]>([]);
+
+
+  const data = useSelector((state: any) => {
+    return state.countries;
+  });
+  const extractedArrays = data[1];
+  console.log(extractedArrays)
+
+
+
   const [citiesInCountry, setCitiesInCountry] = useState<
     Record<string, City[]>
   >({});
-  const [selectedCities, setSelectedCities] = useState<
-    Record<string, Record<number, boolean>>
-  >({});
+  const [selectedCities, setSelectedCities] = useState<Record<string, Record<number, boolean>>>({});
+
+
   useEffect(() => {
     // Load cities data for all countries at the initial render
     const citiesForCountries: Record<string, City[]> = {};
@@ -39,28 +40,20 @@ function CitiesCheckbox({ setManageCity }: ManageCities) {
       citiesForCountries[data.code] = citiesForCountry;
     });
     setCitiesInCountry(citiesForCountries);
-    setSelectedCities({});
-  }, []);
-  const handleToggleAll = (countryCode: string) => {
-    const citiesToToggle =
-      citiesInCountry[countryCode]?.map((city) => city.id) || [];
-    setSelectedCities((prevSelectedCities) => {
-      const allSelected = citiesToToggle.every(
-        (cityId) => prevSelectedCities[countryCode]?.[cityId]
-      );
-      const updatedSelectedCities: Record<number, boolean> = {};
-      citiesToToggle.forEach((cityId) => {
-        updatedSelectedCities[cityId] = !allSelected;
+
+    // Initialize selectedCities state based on data from Redux store
+    const initialSelectedCities: Record<string, Record<number, boolean>> = {};
+    extractedArrays.forEach((country: any) => {
+      const countryCode = country.code;
+      if (!initialSelectedCities[countryCode]) {
+        initialSelectedCities[countryCode] = {};
+      }
+      country.cities.forEach((city: any) => {
+        initialSelectedCities[countryCode][city.id] = true;
       });
-      return {
-        ...prevSelectedCities,
-        [countryCode]: {
-          ...prevSelectedCities[countryCode],
-          ...updatedSelectedCities,
-        },
-      };
     });
-  };
+    setSelectedCities(initialSelectedCities);
+  }, [data]);
 
   const handleSelectAll = () => {
     const allCitiesSelected = ShortCountryList.every((data) =>
@@ -92,32 +85,29 @@ function CitiesCheckbox({ setManageCity }: ManageCities) {
 
   const MAX_CITIES = 40;
 
-  useEffect(() => {
-    // Load cities data for all countries at the initial render
-    const citiesForCountries: Record<string, City[]> = {};
-    ShortCountryList.forEach((data) => {
-      const citiesForCountry = (cities as City[])
-        .filter((city) => city.country === data.code)
-        .map((city, index) => ({ ...city, id: index + 1 }));
-      citiesForCountries[data.code] = citiesForCountry;
-    });
-    setCountryData(
-      ShortCountryList.map((data) => ({
-        id: 0, // Assign a unique ID or use index + 1, if you want
-        countryCode: data.code,
-        cities: [],
-      }))
-    );
-  }, []);
-
-  
-
-  const handleCityChange = (
-    countryCode: string,
-    cityId: number,
-    checked: boolean
-  ) => {
+  const handleToggleAll = (countryCode: string) => {
+    const citiesToToggle =
+      citiesInCountry[countryCode]?.map((city) => city.id) || [];
     setSelectedCities((prevSelectedCities) => {
+      const allSelected = citiesToToggle.every(
+        (cityId) => prevSelectedCities[countryCode]?.[cityId]
+      );
+      const updatedSelectedCities: Record<number, boolean> = {};
+      citiesToToggle.forEach((cityId) => {
+        updatedSelectedCities[cityId] = !allSelected;
+      });
+      return {
+        ...prevSelectedCities,
+        [countryCode]: {
+          ...prevSelectedCities[countryCode],
+          ...updatedSelectedCities,
+        },
+      };
+    });
+  };
+
+  const handleCityChange = (countryCode: string, cityId: number, checked: boolean) => {
+    setSelectedCities((prevSelectedCities: Record<string, Record<number, boolean>>) => {
       const updatedSelectedCities = {
         ...prevSelectedCities,
         [countryCode]: {
@@ -128,80 +118,66 @@ function CitiesCheckbox({ setManageCity }: ManageCities) {
       return updatedSelectedCities;
     });
   };
-  const data = useSelector((state: any) => {
-    return state.countries;
-  });
-
-  useEffect(() => {
-    setCountryData(data.map((country: any) => ({
-      id: country.id,
-      countryCode: country.code,
-      cities: country.cities.map((city: any) => city.id),
-    })));
-  }, [data]);
-
-  // ...
-
   function addContact() {
-    const selectedCountriesData: Record<
-      string,
-      { id: number; city: string }[]
-    > = {};
+    const selectedCountriesData: { code: string; cities: number[] }[] = [];
 
-    // Extract the selected cities for each country and add them to the selectedCountriesData object
+    // Loop through all selected countries and their cities
     Object.entries(selectedCities).forEach(([countryCode, cityData]) => {
-      selectedCountriesData[countryCode] = Object.entries(cityData)
+      const selectedCitiesIds = Object.entries(cityData)
         .filter(([cityId, checked]) => checked)
-        .map(([cityId]) => ({
-          id: parseInt(cityId),
-          city:
-            citiesInCountry[countryCode]?.find(
-              (city) => city.id === parseInt(cityId)
-            )?.name || "",
-        }));
-    });
+        .map(([cityId]) => parseInt(cityId));
 
-    // Check if the data for each country already exists in the state
-    Object.entries(selectedCountriesData).forEach(([countryCode, cities]) => {
-      const existingCountry = data.find((country: any) => country.code === countryCode);
-      if (existingCountry) {
-        // Country with the same code already exists, update its cities in the Redux store
-        const updatedCountry = {
-          ...existingCountry,
-          cities: cities.map(city => ({ id: city.id })), // Convert city objects to {id} format as in the Redux store
-        };
-        dispatch(editCountry(updatedCountry)); // Correct the action creator name to 'editCountry'
-      } else {
-        // Country with the code does not exist, add a new entry to the Redux store
-        dispatch(addCountries({ code: countryCode, cities: cities.map(city => ({ id: city.id })) }));
+      if (selectedCitiesIds.length > 0) {
+        selectedCountriesData.push({ code: countryCode, cities: selectedCitiesIds });
       }
     });
 
+    // Dispatch action to update the Redux store with all selected countries and cities
+    dispatch(addCountries(selectedCountriesData));
+
     setManageCity(false);
   }
+  
+  
+  
+  
+  
+  
 
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-  // Load cities data for all countries at the initial render
-  const citiesForCountries: Record<string, City[]> = {};
-  ShortCountryList.forEach((data) => {
-    const citiesForCountry = (cities as City[])
-      .filter((city) => city.country === data.code)
-      .map((city, index) => ({ ...city, id: index + 1 }));
-    citiesForCountries[data.code] = citiesForCountry;
-  });
-  setCitiesInCountry(citiesForCountries);
-  const initialSelectedCities: Record<string, Record<number, boolean>> = {};
-  data.forEach((country: any) => {
-    const countryCode = country.code;
-    if (!initialSelectedCities[countryCode]) {
-      initialSelectedCities[countryCode] = {};
-    }
-    country.cities.forEach((city: any) => {
-      initialSelectedCities[countryCode][city.id] = true;
+    // Load cities data for all countries at the initial render
+    const citiesForCountries: Record<string, City[]> = {};
+    ShortCountryList.forEach((data) => {
+      const citiesForCountry = (cities as City[])
+        .filter((city) => city.country === data.code)
+        .map((city, index) => ({ ...city, id: index + 1 }));
+      citiesForCountries[data.code] = citiesForCountry;
     });
-  });
-  setSelectedCities(initialSelectedCities);
-}, []);
+    setCitiesInCountry(citiesForCountries);
+
+    // Initialize selectedCities state based on data from 'data' object
+    const initialSelectedCities: Record<string, Record<number, boolean>> = {};
+    extractedArrays.forEach((country: any) => {
+      const countryCode = country.code;
+      if (!initialSelectedCities[countryCode]) {
+        initialSelectedCities[countryCode] = {};
+      }
+      citiesForCountries[countryCode]?.forEach((city) => {
+        initialSelectedCities[countryCode][city.id] = country.cities.includes(
+          city.id
+        );
+      });
+    });
+    setSelectedCities(initialSelectedCities);
+
+    setIsLoading(false); // Mark data loading as complete
+  }, [data]);
+
+  if (isLoading) {
+    // Show loading state or spinner until data is ready
+    return <div>Loading...</div>;
+  }
 
   return (
     <Grid item sx={{ width: "80%" }}>

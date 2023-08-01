@@ -1,7 +1,8 @@
 interface City {
     id: number;
-    country: string;
     name: string;
+    country: string;
+    
     lat: string;
     lng: string;
   }

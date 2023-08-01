@@ -34,6 +34,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
     setSelectedServices(services);
   };
   const [ManageCity, setManageCity] = useState(false);
+  const [ArrayIndex, setArrayIndex] = useState(0);
 
   return (
     <Box
@@ -68,10 +69,10 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
       SelectedComponent === "Countries List" ? (
         <>
            {
-          !ManageCity && (<ManageCities setManageCity={setManageCity} ></ManageCities>  )
+          !ManageCity && (<ManageCities setManageCity={setManageCity} setArrayIndex={setArrayIndex} ></ManageCities>  )
         }
         {ManageCity && (
-         <CitiesCheckbox setManageCity={setManageCity} ></CitiesCheckbox>
+         <CitiesCheckbox setManageCity={setManageCity}  ></CitiesCheckbox>
         )}
         </>
       ) :
