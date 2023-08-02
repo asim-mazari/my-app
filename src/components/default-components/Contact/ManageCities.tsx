@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Box,
@@ -20,16 +20,14 @@ import {
   Typography,
 } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
-import { useSelector , useDispatch,} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { deleteCountry } from "../../../Store/CountryClice";
 import cities from "cities.json"; // Import the cities list
 
-
-
 interface ManageCities {
-    setManageCity: React.Dispatch<React.SetStateAction<boolean>>;
-    setArrayIndex: React.Dispatch<React.SetStateAction<number>>;
-  }
+  setManageCity: React.Dispatch<React.SetStateAction<boolean>>;
+  setArrayIndex: React.Dispatch<React.SetStateAction<any>>;
+}
 
 // Sample data
 const citiesData = cities as City[];
@@ -44,46 +42,40 @@ interface DataItem {
   cities: number[]; // Array of city index IDs
 }
 
-
-function ManageCities({ setManageCity,setArrayIndex }: ManageCities) {
+function ManageCities({ setManageCity, setArrayIndex }: ManageCities) {
   const dispatch = useDispatch(); // Move this line here
   const [sorting, setSorting] = useState("id"); // Add state for sorting selection
   // Replace 'countries' with the name of your slice in the Redux store
 
-const data = useSelector((state: any) => {
+  const data = useSelector((state: any) => {
     return state.countries;
   });
-console.log(data) 
-  const sortData = (data:any) => {
+
+  console.log(data);
+  const sortData = (data: any) => {
     // Replace this function with your actual sorting logic
     // For now, it returns the data as it is (no sorting)
     return data;
   };
 
-  function addContact()
-  {
+  function addContact() {
     setManageCity(true);
+    setArrayIndex(null);
   }
-  let counter = 0;
-  
-
-
-  // Function to handle delete button click
-  function handleDelete(id:any) {
+  function handleDelete(id: any) {
     // Dispatch the deleteCountry action with the id to delete the country
     dispatch(deleteCountry(id));
   }
-
-  const  EditCountry = (id:number) => 
-  {
-    setManageCity(true)
-    setArrayIndex(id)
-  }
-
-
+  const EditCountry = (id: number) => {
+    setManageCity(true);
+    setArrayIndex(id);
+  };
   return (
     <Grid sx={{ width: "100%" }} display="flex" justifyContent="center">
-      <Paper elevation={3} sx={{ padding: "10px", marginLeft: "20px", width: "100%" }}>
+      <Paper
+        elevation={3}
+        sx={{ padding: "10px", marginLeft: "20px", width: "100%" }}
+      >
         <Typography variant="h5">Manage Countries</Typography>
         <Grid container display="flex">
           <FormControl sx={{ width: "20%" }}>
@@ -119,7 +111,9 @@ console.log(data)
             )}
           />
 
-          <Button variant="outlined" onClick={addContact}>Add Info</Button>
+          <Button variant="outlined" onClick={addContact}>
+            Add Info
+          </Button>
         </Grid>
         <Table sx={{ width: "100%" }}>
           <TableHead>
@@ -130,27 +124,34 @@ console.log(data)
             </TableRow>
           </TableHead>
           <TableBody>
-
-          {data.map((item: any) => (
-            <TableRow key={item.id}>
-              <TableCell>{++counter}</TableCell>
-              <TableCell>
-                {/* Add delete button */}
-                <IconButton color="error" aria-label="delete" onClick={() => handleDelete(item.id)}>
-                  {/* Replace 'DeleteIcon' with your desired delete icon */}
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
-              <TableCell>
-                {/* Add edit button */}
-                <IconButton color="primary" aria-label="edit" onClick={() => EditCountry(counter)}>
-                  {/* Replace 'EditIcon' with your desired edit icon */}
-                  <EditIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+            {data.map((item: any, index: number) => (
+              <TableRow key={item.id}>
+                <TableCell>{index}</TableCell>
+                <TableCell>
+                  {/* Add delete button */}
+                  <IconButton
+                    color="error"
+                    aria-label="delete"
+                    onClick={() => handleDelete(item.id)}
+                  >
+                    {/* Replace 'DeleteIcon' with your desired delete icon */}
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+                <TableCell>
+                  {/* Add edit button */}
+                  <IconButton
+                    color="primary"
+                    aria-label="edit"
+                    onClick={() => EditCountry(index)}
+                  >
+                    {/* Replace 'EditIcon' with your desired edit icon */}
+                    <EditIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
         </Table>
       </Paper>
     </Grid>

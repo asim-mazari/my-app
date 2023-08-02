@@ -72,7 +72,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
           !ManageCity && (<ManageCities setManageCity={setManageCity} setArrayIndex={setArrayIndex} ></ManageCities>  )
         }
         {ManageCity && (
-         <CitiesCheckbox setManageCity={setManageCity}  ></CitiesCheckbox>
+         <CitiesCheckbox setManageCity={setManageCity} setArrayIndex={setArrayIndex} ArrayIndex={ArrayIndex}  ></CitiesCheckbox>
         )}
         </>
       ) :
