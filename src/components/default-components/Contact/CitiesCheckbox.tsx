@@ -33,6 +33,10 @@ function CitiesCheckbox({
   const [selectedCities, setSelectedCities] = useState<
     Record<string, Record<number, boolean>>
   >({});
+  const [initialSelectedCities, setInitialSelectedCities] = useState<
+  Record<string, Record<number, boolean>>
+>({});
+
   useEffect(() => {
     // Load cities data for all countries at the initial render
     const citiesForCountries: Record<string, City[]> = {};
@@ -110,22 +114,55 @@ function CitiesCheckbox({
     });
   };
 
-  const handleCityChange = (
-    countryCode: string,
-    cityId: number,
-    checked: boolean
-  ) => {
-    setSelectedCities((prevSelectedCities) => {
-      const updatedSelectedCities = {
-        ...prevSelectedCities,
-        [countryCode]: {
-          ...(prevSelectedCities[countryCode] || {}),
-          [cityId]: checked,
-        },
-      };
-      return updatedSelectedCities;
-    });
-  };
+
+ const [haschange, sethaschange] = useState(false);
+
+ const handleCityChange = (
+  countryCode: string,
+  cityId: number,
+  checked: boolean
+) => {
+  setSelectedCities((prevSelectedCities) => {
+    // Check if the current city was previously selected
+    const wasCitySelected = prevSelectedCities[countryCode]?.[cityId] || false;
+
+    // Update the selected cities with the new value
+    const updatedSelectedCities = {
+      ...prevSelectedCities,
+      [countryCode]: {
+        ...(prevSelectedCities[countryCode] || {}),
+        [cityId]: checked,
+      },
+    };
+
+    // Check if any checkbox is still checked for the current countryCode
+    let hasAnyCheckboxChecked = false;
+    for (const cityId in updatedSelectedCities[countryCode]) {
+      if (updatedSelectedCities[countryCode][cityId]) {
+        hasAnyCheckboxChecked = true;
+        break;
+      }
+    }
+
+    // Update the haschange state based on the new city selection and checkboxes
+    sethaschange(
+      JSON.stringify(initialSelectedCities) !==
+        JSON.stringify(updatedSelectedCities)
+    );
+
+    return updatedSelectedCities;
+  });
+};
+
+
+
+
+
+
+
+
+
+  
   function addCountry() {
     if (ArrayIndex !== null) {
       const selectedCountriesData: { code: string; cities: number[] }[] = [];
@@ -174,6 +211,7 @@ function CitiesCheckbox({
     setManageCity(false);
   }
 
+
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     // Load cities data for all countries at the initial render
@@ -202,6 +240,8 @@ function CitiesCheckbox({
         });
       });
       setSelectedCities(initialSelectedCities);
+      setInitialSelectedCities(initialSelectedCities)
+      
     }
 
     setIsLoading(false); // Mark data loading as complete
@@ -371,7 +411,11 @@ function CitiesCheckbox({
               })}
             </Grid>
           </Grid>
-          <Button variant="outlined" onClick={addCountry}>
+          <Button
+            variant="outlined"
+            onClick={addCountry}
+            disabled={ArrayIndex !== null && !haschange}
+          >
             {ArrayIndex === null ? "Add Data" : "Update Data"}
           </Button>
         </Grid>
