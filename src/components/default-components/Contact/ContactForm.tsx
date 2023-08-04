@@ -8,7 +8,7 @@ import ContactData from "./ContactData";
 import { useDispatch } from "react-redux";
 import { addContact, editContact } from "../../../Store/ContactClice";
 import { useSelector } from "react-redux";
-import CitiesCheckbox from "./CitiesCheckbox";
+import CitiesCheckbox from "../CountriesData/CitiesCheckbox";
 
 const validationSchema = Yup.object().shape({
   fullName: Yup.string().required("Full Name is required"),

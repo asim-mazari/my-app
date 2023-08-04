@@ -4,13 +4,15 @@ import OurServices from "./OurServices";
 import ShowServices from "./ShowServices";
 import ContactForm from "./Contact/ContactForm";
 import Field from "./Contact/Field";
-import CitiesCheckbox from "./Contact/CitiesCheckbox";
-import CountriesAccordion from "./Contact/CountriesAccordion";
-import ManageCities from "./Contact/ManageCities";
+import CitiesCheckbox from "./CountriesData/CitiesCheckbox";
+import CountriesAccordion from "./CountriesData/CountriesAccordion";
+import ManageCities from "./CountriesData/ManageCities";
+import Gallery from "./Gallery/Gallery";
 interface ContentContainerProps {
   open: boolean;
   SelectedComponent: any;
 }
+
 
 const ContentContainer: React.FC<ContentContainerProps> = ({
   open,
@@ -80,6 +82,12 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
       SelectedComponent === "Countries Accordion" ? (
         <>
           <CountriesAccordion></CountriesAccordion>
+        </>
+      ) :
+     
+      SelectedComponent === "Gallery" ? (
+        <>
+          <Gallery></Gallery>
         </>
       ) :
       

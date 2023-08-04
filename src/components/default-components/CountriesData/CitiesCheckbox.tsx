@@ -33,35 +33,12 @@ function CitiesCheckbox({
   const [selectedCities, setSelectedCities] = useState<
     Record<string, Record<number, boolean>>
   >({});
+
   const [initialSelectedCities, setInitialSelectedCities] = useState<
-  Record<string, Record<number, boolean>>
->({});
+    Record<string, Record<number, boolean>>
+  >({});
 
-  useEffect(() => {
-    // Load cities data for all countries at the initial render
-    const citiesForCountries: Record<string, City[]> = {};
-    ShortCountryList.forEach((data) => {
-      const citiesForCountry = (cities as City[])
-        .filter((city) => city.country === data.code)
-        .map((city, index) => ({ ...city, id: index + 1 }));
-      citiesForCountries[data.code] = citiesForCountry;
-    });
-    setCitiesInCountry(citiesForCountries);
-
-    if (ArrayIndex !== null) {
-      const initialSelectedCities: Record<string, Record<number, boolean>> = {};
-      extractedArrays.forEach((country: any) => {
-        const countryCode = country.code;
-        if (!initialSelectedCities[countryCode]) {
-          initialSelectedCities[countryCode] = {};
-        }
-        country.cities.forEach((city: any) => {
-          initialSelectedCities[countryCode][city.id] = true;
-        });
-      });
-      setSelectedCities(initialSelectedCities);
-    }
-  }, [data]);
+  const [haschange, sethaschange] = useState(false);
 
   const handleSelectAll = () => {
     const allCitiesSelected = ShortCountryList.every((data) =>
@@ -92,7 +69,6 @@ function CitiesCheckbox({
   };
 
   const MAX_CITIES = 40;
-
   const handleToggleAll = (countryCode: string) => {
     const citiesToToggle =
       citiesInCountry[countryCode]?.map((city) => city.id) || [];
@@ -114,55 +90,33 @@ function CitiesCheckbox({
     });
   };
 
+  const handleCityChange = (
+    countryCode: string,
+    cityId: number,
+    checked: boolean
+  ) => {
+    setSelectedCities((prevSelectedCities) => {
+      // Check if the current city was previously selected
+      const wasCitySelected =
+        prevSelectedCities[countryCode]?.[cityId] || false;
 
- const [haschange, sethaschange] = useState(false);
+      // Update the selected cities with the new value
+      const updatedSelectedCities = {
+        ...prevSelectedCities,
+        [countryCode]: {
+          ...(prevSelectedCities[countryCode] || {}),
+          [cityId]: checked,
+        },
+      };
+      // Update the haschange state based on the new city selection and checkboxes
+      sethaschange(
+        JSON.stringify(initialSelectedCities) !==
+          JSON.stringify(updatedSelectedCities)
+      );
+      return updatedSelectedCities;
+    });
+  };
 
- const handleCityChange = (
-  countryCode: string,
-  cityId: number,
-  checked: boolean
-) => {
-  setSelectedCities((prevSelectedCities) => {
-    // Check if the current city was previously selected
-    const wasCitySelected = prevSelectedCities[countryCode]?.[cityId] || false;
-
-    // Update the selected cities with the new value
-    const updatedSelectedCities = {
-      ...prevSelectedCities,
-      [countryCode]: {
-        ...(prevSelectedCities[countryCode] || {}),
-        [cityId]: checked,
-      },
-    };
-
-    // Check if any checkbox is still checked for the current countryCode
-    let hasAnyCheckboxChecked = false;
-    for (const cityId in updatedSelectedCities[countryCode]) {
-      if (updatedSelectedCities[countryCode][cityId]) {
-        hasAnyCheckboxChecked = true;
-        break;
-      }
-    }
-
-    // Update the haschange state based on the new city selection and checkboxes
-    sethaschange(
-      JSON.stringify(initialSelectedCities) !==
-        JSON.stringify(updatedSelectedCities)
-    );
-
-    return updatedSelectedCities;
-  });
-};
-
-
-
-
-
-
-
-
-
-  
   function addCountry() {
     if (ArrayIndex !== null) {
       const selectedCountriesData: { code: string; cities: number[] }[] = [];
@@ -211,7 +165,6 @@ function CitiesCheckbox({
     setManageCity(false);
   }
 
-
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     // Load cities data for all countries at the initial render
@@ -240,8 +193,7 @@ function CitiesCheckbox({
         });
       });
       setSelectedCities(initialSelectedCities);
-      setInitialSelectedCities(initialSelectedCities)
-      
+      setInitialSelectedCities(initialSelectedCities);
     }
 
     setIsLoading(false); // Mark data loading as complete

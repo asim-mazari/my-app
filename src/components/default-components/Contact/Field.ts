@@ -7,9 +7,6 @@ interface Field {
   address: string;
   selectedCountry: string;
   selectedCity: string; // Add selectedCity property
-
-  
-
   error?: boolean;
 }
 
