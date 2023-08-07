@@ -8,6 +8,7 @@ import CitiesCheckbox from "./CountriesData/CitiesCheckbox";
 import CountriesAccordion from "./CountriesData/CountriesAccordion";
 import ManageCities from "./CountriesData/ManageCities";
 import Gallery from "./Gallery/Gallery";
+import ManageGallery from "./Gallery/ManageGallery";
 interface ContentContainerProps {
   open: boolean;
   SelectedComponent: any;
@@ -37,6 +38,10 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
   };
   const [ManageCity, setManageCity] = useState(false);
   const [ArrayIndex, setArrayIndex] = useState(0);
+
+
+  const [Managegallery, setManagegallery] = useState(false);
+  const [GalleryIndex, setGalleryIndex] = useState(0);
 
   return (
     <Box
@@ -81,13 +86,20 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
       
       SelectedComponent === "Countries Accordion" ? (
         <>
+        
           <CountriesAccordion></CountriesAccordion>
         </>
       ) :
      
       SelectedComponent === "Gallery" ? (
         <>
-          <Gallery></Gallery>
+         {
+          !Managegallery &&( <ManageGallery setManagegallery={setManagegallery} setGalleryIndex={setGalleryIndex}></ManageGallery>)
+        }
+
+        {
+          Managegallery &&( <Gallery  setManagegallery={setManagegallery} setGalleryIndex={setGalleryIndex} GalleryIndex={GalleryIndex} ></Gallery>)
+        }
         </>
       ) :
       
