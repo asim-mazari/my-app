@@ -17,7 +17,7 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { v4 as uuidv4 } from "uuid";
-import { addGallery } from "../../../Store/GalleryClice";
+import { addGallery, editGallery } from "../../../Store/GalleryClice";
 import { useSelector, useDispatch } from "react-redux";
 
 const HoverableCard = styled(Card)(({ theme }) => ({
@@ -85,6 +85,7 @@ const CheckboxWrapper = styled("div")({
 
 const StyledCheckbox = styled(Checkbox)({
   zIndex: 2, // Ensure checkbox is above the overlay
+  color: "yellow",
 });
 
 // ... (other imports and styled components)
@@ -109,23 +110,15 @@ function Gallery({
     Array<{ id: string; title: string; path: string }>
   >([]);
 
-
   useEffect(() => {
     if (GalleryIndex !== null) {
       const extractedArrays = GalleryData[GalleryIndex];
       const flattenedImages = extractedArrays.flat();
-      const newImages = flattenedImages.map((imageData: any, index: any) => ({
-        id: imageData.id,
-        title: imageData.title,
-        path: imageData.path, // Assuming you have a "path" property in your data
-      }));
-      setImages(newImages);
+      setImages(flattenedImages); // Store the Blob data
     }
   }, [GalleryData, GalleryIndex]);
 
-  
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const ImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
       const imageFiles = Array.from(files).filter((file) =>
@@ -135,6 +128,7 @@ function Gallery({
         alert("Please select only image files.");
         return;
       }
+
       const newImages = imageFiles.map((file) => ({
         id: uuidv4(),
         title: file.name,
@@ -145,35 +139,31 @@ function Gallery({
     }
   };
 
-  const handleDeleteImage = (id: string) => {
-    setImages((prevImages) => prevImages.filter((image) => image.id !== id));
-  };
-
-  function CreateGallery() {
-    if(GalleryIndex!==null)
-    {
-
+  const DeleteImage = (id: string) => {
+    const updatedImages = images.filter((image) => image.id !== id);
+    setImages(updatedImages);
+    if (GalleryIndex !== null) {
+      dispatch(editGallery({ index: GalleryIndex, gallery: updatedImages }));
     }
-    else
-    {
+  };
+  function CreateGallery() {
+    if (GalleryIndex !== null) {
+      dispatch(editGallery({ index: GalleryIndex, gallery: images }));
+    } else {
       const imagePaths = images.map((image) => ({
         id: image.id,
         title: image.title,
         path: image.path,
       }));
       dispatch(addGallery(imagePaths));
-      
     }
-   
     setManagegallery(false);
   }
   const [selectAll, setSelectAll] = useState(false);
 
   // ...
 
-  const SelectAllChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const SelectAllChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectAll(event.target.checked);
   };
 
@@ -200,11 +190,8 @@ function Gallery({
     );
     setImages(remainingImages);
     setSelectedImageIds([]); // Clear selected IDs
-    setSelectAll(false)
+    setSelectAll(false);
   };
-  images.map((data)=>{
-    console.log(data.path);
-  })
 
   return (
     <Box p={3}>
@@ -216,7 +203,7 @@ function Gallery({
               id="image-input"
               type="file"
               multiple
-              onChange={handleImageChange}
+              onChange={ImageChange}
             />
             <IconButton component="span">
               <CloudUploadIcon fontSize="large" />
@@ -233,9 +220,7 @@ function Gallery({
       </Typography>
       <Grid display="flex" justifyContent="space-between">
         <FormControlLabel
-          control={
-            <Checkbox checked={selectAll} onChange={SelectAllChange} />
-          }
+          control={<Checkbox checked={selectAll} onChange={SelectAllChange} />}
           label="Select Images"
         />
         <Button
@@ -260,12 +245,17 @@ function Gallery({
                 <Box
                   component="img"
                   alt={image.title}
-                  src={image.path}
+                  src={`./images/${image.title}`}
                   sx={{ flex: "1 1 auto", objectFit: "cover" }}
                 />
                 <CheckboxWrapper>
                   <StyledCheckbox
-                    style={{ visibility: selectAll || selectedImageIds.includes(image.id) ? "visible" : "hidden" }}
+                    style={{
+                      visibility:
+                        selectAll || selectedImageIds.includes(image.id)
+                          ? "visible"
+                          : "hidden",
+                    }}
                     checked={selectedImageIds.includes(image.id)}
                     onChange={(event) => CheckboxChange(event, image.id)}
                   />
@@ -276,7 +266,7 @@ function Gallery({
                   </TitleTypography>
                   <DeleteButton
                     className="deleteButton"
-                    onClick={() => handleDeleteImage(image.id)}
+                    onClick={() => DeleteImage(image.id)}
                     size="small"
                   >
                     <DeleteIcon />
@@ -289,7 +279,7 @@ function Gallery({
       </UniqueImageList>
 
       <Button variant="outlined" sx={{ width: "100%" }} onClick={CreateGallery}>
-        Create Gallery
+        {GalleryIndex === null ? "Create Gallery" : "Update Gallery"}
       </Button>
     </Box>
   );

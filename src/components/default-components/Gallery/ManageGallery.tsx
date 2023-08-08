@@ -21,13 +21,15 @@ import {
 } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteGallery } from "../../../Store/GalleryClice";
+import { deleteGallery} from "../../../Store/GalleryClice";
 import cities from "cities.json"; // Import the cities list
 
 interface ManageGallery{
     setManagegallery: React.Dispatch<React.SetStateAction<boolean>>;
     setGalleryIndex: React.Dispatch<React.SetStateAction<any>>;
 }
+
+
 
 
 
@@ -41,7 +43,7 @@ function ManageGallery({ setManagegallery, setGalleryIndex }: ManageGallery) {
   const GalleryData = useSelector((state: any) => {
     return state.Gallery;
   });
-
+  
 
 
   function addContact() {
@@ -97,7 +99,7 @@ function ManageGallery({ setManagegallery, setGalleryIndex }: ManageGallery) {
           />
 
           <Button variant="outlined" onClick={addContact}>
-            Add Info
+            Add Gallery
           </Button>
         </Grid>
         <Table sx={{ width: "100%" }}>

@@ -7,6 +7,7 @@ const GalleryClice = createSlice({
     addGallery(state, action) {
       state.push(action.payload);
     },
+    
     deleteGallery(state, action) {
       const countryIndex = state.findIndex(
         (country) => country.id === action.payload
@@ -15,6 +16,7 @@ const GalleryClice = createSlice({
         state.splice(countryIndex, 1);
       }
     },
+   
 
     editGallery(state, action) {
       const { index, gallery } = action.payload;
