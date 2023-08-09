@@ -106,9 +106,7 @@ function Gallery({
     return state.Gallery;
   });
 
-  const [images, setImages] = useState<
-    Array<{ id: string; title: string; path: string }>
-  >([]);
+  
 
   useEffect(() => {
     if (GalleryIndex !== null) {
@@ -117,27 +115,51 @@ function Gallery({
       setImages(flattenedImages); // Store the Blob data
     }
   }, [GalleryData, GalleryIndex]);
+  const [images, setImages] = useState<
+  Array<{ id: string; title: string; base64: string }>
+>([]);
 
-  const ImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      const imageFiles = Array.from(files).filter((file) =>
-        file.type.startsWith("image/")
-      );
-      if (imageFiles.length !== files.length) {
-        alert("Please select only image files.");
-        return;
-      }
-
-      const newImages = imageFiles.map((file) => ({
-        id: uuidv4(),
-        title: file.name,
-        path: URL.createObjectURL(file), // Store the URL path
-      }));
-
-      setImages((prevImages) => [...prevImages, ...newImages]);
+const ImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const files = event.target.files;
+  if (files) {
+    const imageFiles = Array.from(files).filter((file) =>
+      file.type.startsWith('image/')
+    );
+    if (imageFiles.length !== files.length) {
+      alert('Please select only image files.');
+      return;
     }
-  };
+
+    const newImagesPromises = imageFiles.map((file) => {
+      return new Promise<{ id: string; title: string; base64: string }>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          const base64Image = reader.result?.toString().split(',')[1] || '';
+          resolve({
+            id: uuidv4(),
+            title: file.name,
+            base64: base64Image,
+          });
+        };
+        reader.onerror = (error) => {
+          reject(error);
+        };
+      });
+    });
+
+    try {
+      const newImages = await Promise.all(newImagesPromises);
+      setImages((prevImages) => [...prevImages, ...newImages]);
+     
+    } catch (error) {
+      console.error('Error reading images:', error);
+    }
+  }
+};
+
+
+
 
   const DeleteImage = (id: string) => {
     const updatedImages = images.filter((image) => image.id !== id);
@@ -146,30 +168,24 @@ function Gallery({
       dispatch(editGallery({ index: GalleryIndex, gallery: updatedImages }));
     }
   };
+
+
   function CreateGallery() {
     if (GalleryIndex !== null) {
       dispatch(editGallery({ index: GalleryIndex, gallery: images }));
     } else {
-      const imagePaths = images.map((image) => ({
-        id: image.id,
-        title: image.title,
-        path: image.path,
-      }));
-      dispatch(addGallery(imagePaths));
+    
+     
+      dispatch(addGallery(images));
     }
     setManagegallery(false);
   }
   const [selectAll, setSelectAll] = useState(false);
-
-  // ...
-
   const SelectAllChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectAll(event.target.checked);
   };
 
   const [selectedImageIds, setSelectedImageIds] = useState<string[]>([]);
-
-  // ...
 
   const CheckboxChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -245,7 +261,7 @@ function Gallery({
                 <Box
                   component="img"
                   alt={image.title}
-                  src={`./images/${image.title}`}
+                 src={`data:image/jpeg;base64,${image.base64}`}
                   sx={{ flex: "1 1 auto", objectFit: "cover" }}
                 />
                 <CheckboxWrapper>
@@ -277,7 +293,6 @@ function Gallery({
           </ImageListItem>
         ))}
       </UniqueImageList>
-
       <Button variant="outlined" sx={{ width: "100%" }} onClick={CreateGallery}>
         {GalleryIndex === null ? "Create Gallery" : "Update Gallery"}
       </Button>

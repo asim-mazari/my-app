@@ -22,18 +22,12 @@ const GalleryClice = createSlice({
       const { index, gallery } = action.payload;
     
       if (index >= 0 && index < state.length) {
-        // Create a new state array with the updated country object
-        const newState = [
-          ...state.slice(0, index),
-          gallery,
-          ...state.slice(index + 1),
-        ];
-    
-        return newState;
+        return state.map((item, i) => (i === index ? gallery : item));
       }
     
-      return state; // Return the original state if index is invalid
+      return state;
     }
+    
   },
 });
 

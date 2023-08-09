@@ -43,9 +43,6 @@ function ManageGallery({ setManagegallery, setGalleryIndex }: ManageGallery) {
   const GalleryData = useSelector((state: any) => {
     return state.Gallery;
   });
-  
-
-
   function addContact() {
     setManagegallery(true);
     setGalleryIndex(null);
@@ -57,6 +54,8 @@ function ManageGallery({ setManagegallery, setGalleryIndex }: ManageGallery) {
     setManagegallery(true);
     setGalleryIndex(id);
   };
+
+  console.log(GalleryData)
   return (
     <Grid sx={{ width: "100%" }} display="flex" justifyContent="center">
       <Paper
