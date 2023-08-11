@@ -21,19 +21,13 @@ import {
 } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteGallery} from "../../../Store/GalleryClice";
+import { deleteGallery } from "../../../Store/GalleryClice";
 import cities from "cities.json"; // Import the cities list
 
-interface ManageGallery{
-    setManagegallery: React.Dispatch<React.SetStateAction<boolean>>;
-    setGalleryIndex: React.Dispatch<React.SetStateAction<any>>;
+interface ManageGallery {
+  setManagegallery: React.Dispatch<React.SetStateAction<boolean>>;
+  setGalleryIndex: React.Dispatch<React.SetStateAction<any>>;
 }
-
-
-
-
-
-
 
 function ManageGallery({ setManagegallery, setGalleryIndex }: ManageGallery) {
   const dispatch = useDispatch(); // Move this line here
@@ -55,7 +49,7 @@ function ManageGallery({ setManagegallery, setGalleryIndex }: ManageGallery) {
     setGalleryIndex(id);
   };
 
-  console.log(GalleryData)
+  console.log(GalleryData);
   return (
     <Grid sx={{ width: "100%" }} display="flex" justifyContent="center">
       <Paper
@@ -112,20 +106,17 @@ function ManageGallery({ setManagegallery, setGalleryIndex }: ManageGallery) {
           <TableBody>
             {GalleryData.map((item: any, index: number) => (
               <TableRow key={item.id}>
-                <TableCell>{index}</TableCell>
+                <TableCell>{index + 1}</TableCell>
                 <TableCell>
-                  {/* Add delete button */}
                   <IconButton
                     color="error"
                     aria-label="delete"
                     onClick={() => handleDelete(item.id)}
                   >
-                    {/* Replace 'DeleteIcon' with your desired delete icon */}
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
                 <TableCell>
-                  {/* Add edit button */}
                   <IconButton
                     color="primary"
                     aria-label="edit"

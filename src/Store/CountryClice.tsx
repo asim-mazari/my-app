@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 const CountrySlice = createSlice({
   name: "Countries",
   initialState: [] as any[],
@@ -19,7 +18,6 @@ const CountrySlice = createSlice({
     // In your reducer
     editCountry(state, action) {
       const { index, country } = action.payload;
-    
       if (index >= 0 && index < state.length) {
         // Create a new state array with the updated country object
         const newState = [
@@ -27,14 +25,11 @@ const CountrySlice = createSlice({
           country,
           ...state.slice(index + 1),
         ];
-    
         return newState;
       }
-    
+
       return state; // Return the original state if index is invalid
-    }
-    
-    
+    },
   },
 });
 
