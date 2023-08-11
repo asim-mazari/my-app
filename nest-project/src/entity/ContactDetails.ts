@@ -13,10 +13,10 @@ export class ContactDetails {
   mobile: string;
 
   @Column()
-  country: string; // You can replace this with a foreign key reference if needed
+  country: string; 
 
   @Column()
-  city: string; // You can replace this with a foreign key reference if needed
+  city: string; 
 
   @Column()
   additionalNotes: string;
@@ -24,7 +24,7 @@ export class ContactDetails {
   @Column()
   businessName: string;
 
-  @ManyToOne(() => Users, user => user.contactDetails) // Many ContactDetails can belong to one Users
-  @JoinColumn({ name: 'user_id' }) // Foreign key column name
+  @ManyToOne(() => Users, user => user.contactDetails) 
+  @JoinColumn({ name: 'user_id' }) 
   user: Users;
 }
