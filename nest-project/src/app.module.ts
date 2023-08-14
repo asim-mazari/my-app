@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Users } from './/entity/Users'; 
-import {ContactDetails} from './/entity/ContactDetails'
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
-import { AuthController } from './auth.controller';
-
+import { Users } from './entity/Users'; 
+import { ContactDetails } from './entity/ContactDetails';
+import { UsersController } from './Controllers/users.controller';
+import { UsersService } from './Services/users.service';
+import { AuthController } from './Controllers/auth.controller';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -16,15 +16,17 @@ import { AuthController } from './auth.controller';
       username: 'root',
       password: '',
       database: 'users',
-      entities: [Users,ContactDetails], // Add your entity class here
+      entities: [Users, ContactDetails],
       synchronize: true,
     }),
     TypeOrmModule.forFeature([Users]),
-    
-  ],
-  controllers: [UsersController,AuthController],
-  providers: [UsersService],
- 
-})
 
+    JwtModule.register({
+      secret: 'temporary-secret-key', // Replace with your temporary secret key
+      signOptions: { expiresIn: '1m' }, // Token expiration time
+    }),
+  ],
+  controllers: [UsersController, AuthController],
+  providers: [UsersService],
+})
 export class AppModule {}
