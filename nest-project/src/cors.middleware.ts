@@ -1,12 +1,9 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import * as express from 'express';
+import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-
-  // Allow CORS using express middleware
-  app.use((req, res, next) => {
+@Injectable()
+export class CorsMiddleware implements NestMiddleware {
+  use(req: Request, res: Response, next: NextFunction) {
     res.header('Access-Control-Allow-Origin', 'http://localhost:3001'); // Replace with your React app's origin
     res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -16,8 +13,5 @@ async function bootstrap() {
     } else {
       next();
     }
-  });
-
-  await app.listen(3000);
+  }
 }
-bootstrap();

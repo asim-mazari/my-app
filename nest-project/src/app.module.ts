@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from './entity/Users'; 
 import { ContactDetails } from './entity/ContactDetails';
@@ -6,6 +6,8 @@ import { UsersController } from './Controllers/users.controller';
 import { UsersService } from './Services/users.service';
 import { AuthController } from './Controllers/auth.controller';
 import { JwtModule } from '@nestjs/jwt';
+import { CorsMiddleware } from './cors.middleware';
+
 
 @Module({
   imports: [
@@ -23,10 +25,16 @@ import { JwtModule } from '@nestjs/jwt';
 
     JwtModule.register({
       secret: 'temporary-secret-key', // Replace with your temporary secret key
-      signOptions: { expiresIn: '1m' }, // Token expiration time
+      signOptions: { expiresIn: '1h' }, // Token expiration time
     }),
   ],
   controllers: [UsersController, AuthController],
   providers: [UsersService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(CorsMiddleware) // Apply the CorsMiddleware
+      .forRoutes('*'); // Apply to all routes, you can adjust this as needed
+  }
+}
