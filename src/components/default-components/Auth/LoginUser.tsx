@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { Grid, Paper, TextField, Typography, Button } from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
 
 interface LoginUsers {
-  setRegister_User: React.Dispatch<React.SetStateAction<boolean>>;
+  setRegister_User: any;
 }
 
 function LoginUser({ setRegister_User }: LoginUsers) {
@@ -11,17 +16,20 @@ function LoginUser({ setRegister_User }: LoginUsers) {
     password: "",
   });
 
+  const [passwordError, setpasswordError] = useState("");
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+    if (name === "password") {
+      setpasswordError("");
+    }
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
-
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     try {
       const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
@@ -30,27 +38,30 @@ function LoginUser({ setRegister_User }: LoginUsers) {
         },
         body: JSON.stringify(formData),
       });
-
       if (response.ok) {
-        // Login successful, you can display a success message or perform desired actions.
-        alert("Login successful");
+        setRegister_User("main");
       } else {
         // Login failed, handle the error.
-        alert("Invalid credentials");
+        setpasswordError("Inavlid Credentials");
       }
     } catch (error) {
       console.error("Error logging in:", error);
     }
   };
-
   function SwitchToRegister() {
-    setRegister_User(true);
+    setRegister_User("register");
   }
-
+  const [showPassword, setShowPassword] = React.useState(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} md={6}>
-        <Paper elevation={3} style={{ padding: "20px" }}>
+        <Paper elevation={3} style={{ padding: "20px", marginTop: "20%" }}>
           <Typography variant="h5">Sign In</Typography>
           <form onSubmit={handleLogin}>
             <TextField
@@ -64,13 +75,29 @@ function LoginUser({ setRegister_User }: LoginUsers) {
             />
             <TextField
               label="Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               variant="outlined"
               name="password"
               value={formData.password}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              error={passwordError !== ""}
+              helperText={passwordError ? passwordError : ""}
             />
             <Button
               type="submit"
@@ -81,10 +108,14 @@ function LoginUser({ setRegister_User }: LoginUsers) {
               Sign In
             </Button>
           </form>
-
-          <Typography onClick={SwitchToRegister} sx={{ marginTop: "20px" }}>
+          <Link
+            component="button"
+            variant="body2"
+            onClick={SwitchToRegister}
+            sx={{ marginTop: "20px",textDecoration:'none' }}
+          >
             Not Registered? Create Account.
-          </Typography>
+          </Link>
         </Paper>
       </Grid>
     </Grid>

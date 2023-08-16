@@ -1,8 +1,8 @@
 import React from "react";
-import Main from "./components/Main";
-import CustomDrawer from "./components/default-components/Drawer";
+import AuthMain from "./components/default-components/Auth/AuthMain";
+
 function APP() {
-  return <Main />;
+  return <AuthMain />;
 }
 
 export default APP;

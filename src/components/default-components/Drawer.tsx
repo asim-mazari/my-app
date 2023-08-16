@@ -146,23 +146,7 @@ const CustomDrawer: React.FC<DrawerProps> = ({
           </ListItem>
 
 
-          <ListItem
-            button
-            key="Gallery"
-            disablePadding
-            onClick={() => {
-              handleListItemClick("Register");
-            }}
-            sx={{
-              backgroundColor:
-                selectedItem === "Register" ? "#e0e0e0" : "",
-            }}
-          >
-            <ListItemIcon>
-              <PersonIcon />
-            </ListItemIcon>
-            <ListItemText primary="Register" />
-          </ListItem>
+     
 
 
 

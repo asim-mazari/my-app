@@ -9,8 +9,7 @@ import CountriesAccordion from "./CountriesData/CountriesAccordion";
 import ManageCities from "./CountriesData/ManageCities";
 import Gallery from "./Gallery/Gallery";
 import ManageGallery from "./Gallery/ManageGallery";
-import RegisterUser from "./Auth/RegisterUser";
-import LoginUser from "./Auth/LoginUser";
+
 interface ContentContainerProps {
   open: boolean;
   SelectedComponent: any;
@@ -41,7 +40,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
   const [ArrayIndex, setArrayIndex] = useState(0);
   const [Managegallery, setManagegallery] = useState(false);
   const [GalleryIndex, setGalleryIndex] = useState(0);
-  const [Register_User, setRegister_User] = useState(false);
+ 
 
   return (
     <Box
@@ -103,15 +102,6 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
               setGalleryIndex={setGalleryIndex}
               GalleryIndex={GalleryIndex}
             ></Gallery>
-          )}
-        </>
-      ) : SelectedComponent === "Register" ? (
-        <>
-          {Register_User && (
-            <RegisterUser setRegister_User={setRegister_User}></RegisterUser>
-          )}
-          {!Register_User && (
-            <LoginUser setRegister_User={setRegister_User}></LoginUser>
           )}
         </>
       ) : (
