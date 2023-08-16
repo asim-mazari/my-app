@@ -10,7 +10,6 @@ const Main: React.FC = () => {
   };
   const [SelectedComponent, setSelectedComponent] = useState("Company Information");
   const theme = createTheme({
-    // Define your theme configurations here
   });
   return (
     <ThemeProvider theme={theme}>

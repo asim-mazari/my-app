@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { Grid, Paper, TextField, Typography, Button } from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
 
 interface RegisterUsers {
-  setRegister_User: React.Dispatch<React.SetStateAction<boolean>>;
+  setRegisterUser: any;
 }
 const initialFormData = {
   FirstName: "",
@@ -11,8 +16,9 @@ const initialFormData = {
   password: "",
   dob: "",
   Address: "",
+  ConfirmPassword: "",
 };
-function RegisterUser({ setRegister_User }: RegisterUsers) {
+function RegisterUser({ setRegisterUser }: RegisterUsers) {
   const [formData, setFormData] = useState({
     FirstName: "",
     Lastname: "",
@@ -20,10 +26,14 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
     password: "",
     dob: "",
     Address: "",
+    ConfirmPassword: "",
   });
-
-  const handleInputChange = (event: any) => {
+  const [emailError, setEmailError] = useState("");
+  const inputChange = (event: any) => {
     const { name, value } = event.target;
+    if (name === "Email") {
+      setEmailError("");
+    }
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -32,6 +42,10 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
+    if (formData.password !== formData.ConfirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
     try {
       const response = await fetch("http://localhost:3000/register", {
         method: "POST",
@@ -47,15 +61,29 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
         setFormData(initialFormData);
       } else {
         // Registration failed, handle the error.
-        alert("Registeration Failed");
+        setEmailError("Email Alrady Exist.");
       }
     } catch (error) {
       console.error("Error registering user:", error);
     }
   };
   function SwitchTologin() {
-    setRegister_User(false);
+    setRegisterUser("login");
   }
+
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const clickShowPassword = () => setShowPassword((show) => !show);
+
+  const [confirmPassword, setConfirmPassword] = React.useState(false);
+
+  const confirmShowPassword = () => setConfirmPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} md={6}>
@@ -69,7 +97,7 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
                 name="FirstName"
                 required
                 value={formData.FirstName}
-                onChange={handleInputChange}
+                onChange={inputChange}
                 margin="normal"
                 sx={{ width: "48%" }}
               />
@@ -79,7 +107,7 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
                 name="Lastname"
                 required
                 value={formData.Lastname}
-                onChange={handleInputChange}
+                onChange={inputChange}
                 margin="normal"
                 sx={{ width: "48%" }}
               />
@@ -91,9 +119,11 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
               name="Email"
               required
               value={formData.Email}
-              onChange={handleInputChange}
+              onChange={inputChange}
               fullWidth
               margin="normal"
+              error={emailError !== ""}
+              helperText={emailError ? emailError : ""}
             />
             <TextField
               label="Address"
@@ -101,7 +131,7 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
               name="Address"
               required
               value={formData.Address}
-              onChange={handleInputChange}
+              onChange={inputChange}
               fullWidth
               margin="normal"
             />
@@ -112,20 +142,65 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
               name="dob"
               required
               value={formData.dob}
-              onChange={handleInputChange}
+              onChange={inputChange}
               fullWidth
               margin="normal"
             />
             <TextField
               label="Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               variant="outlined"
               name="password"
               required
               value={formData.password}
-              onChange={handleInputChange}
+              onChange={inputChange}
               fullWidth
               margin="normal"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={clickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              label="Confirm Password"
+              type={confirmPassword ? "text" : "password"}
+              variant="outlined"
+              name="ConfirmPassword"
+              required
+              value={formData.ConfirmPassword}
+              onChange={inputChange}
+              fullWidth
+              margin="normal"
+              error={formData.password !== formData.ConfirmPassword}
+              helperText={
+                formData.password !== formData.ConfirmPassword
+                  ? "Passwords do not match"
+                  : ""
+              }
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={confirmShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {confirmPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
             <Button
               type="submit"
@@ -136,9 +211,14 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
               Sign Up
             </Button>
           </form>
-          <Typography onClick={SwitchTologin} sx={{ marginTop: "20px" }}>
+          <Link
+            component="button"
+            variant="body2"
+            onClick={SwitchTologin}
+            sx={{ marginTop: "20px", textDecoration: "none" }}
+          >
             Already registered? Click here to log in.
-          </Typography>
+          </Link>
         </Paper>
       </Grid>
     </Grid>
