@@ -4,24 +4,21 @@ import LoginUser from "./LoginUser";
 import Main from "../../Main";
 
 function AuthMain() {
-
-    const [Register_User, setRegister_User] = useState("login");
+  const [registerUser, setRegisterUser] = useState("login");
 
   return (
     <>
-    {Register_User==="register" && (
-      <RegisterUser setRegister_User={setRegister_User}></RegisterUser>
-    )}
+      {registerUser === "register" && (
+        <RegisterUser setRegisterUser={setRegisterUser}></RegisterUser>
+      )}
 
-    {Register_User==="login" && (
-      <LoginUser setRegister_User={setRegister_User}></LoginUser>
-    )}
-   
-    {Register_User==="main" && (
-      <Main></Main>
-    )}
-  </>
-  )
+      {registerUser === "login" && (
+        <LoginUser setRegisterUser={setRegisterUser}></LoginUser>
+      )}
+
+      {registerUser === "main" && <Main></Main>}
+    </>
+  );
 }
 
-export default AuthMain
+export default AuthMain;

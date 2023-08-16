@@ -7,21 +7,19 @@ import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 
 interface LoginUsers {
-  setRegister_User: any;
+  setRegisterUser: any;
 }
 
-function LoginUser({ setRegister_User }: LoginUsers) {
+function LoginUser({ setRegisterUser }: LoginUsers) {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
-  const [passwordError, setpasswordError] = useState("");
-
+  const [passwordError, setPasswordError] = useState("");
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     if (name === "password") {
-      setpasswordError("");
+      setPasswordError("");
     }
     setFormData((prevData) => ({
       ...prevData,
@@ -39,20 +37,20 @@ function LoginUser({ setRegister_User }: LoginUsers) {
         body: JSON.stringify(formData),
       });
       if (response.ok) {
-        setRegister_User("main");
+        setRegisterUser("main");
       } else {
         // Login failed, handle the error.
-        setpasswordError("Inavlid Credentials");
+        setPasswordError("Inavlid Credentials");
       }
     } catch (error) {
       console.error("Error logging in:", error);
     }
   };
   function SwitchToRegister() {
-    setRegister_User("register");
+    setRegisterUser("register");
   }
   const [showPassword, setShowPassword] = React.useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const clickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -87,7 +85,7 @@ function LoginUser({ setRegister_User }: LoginUsers) {
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
+                      onClick={clickShowPassword}
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >

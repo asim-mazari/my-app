@@ -15,15 +15,12 @@ export class AuthController {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
-
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
     const user = await this.usersService.findByEmail(loginDto.Email);
-
     if (!user || user.password !== loginDto.password) {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
-
     // Generate a JWT token with a 1-minute expiration
     const payload = { sub: user.id };
     const token = this.jwtService.sign(payload, { expiresIn: '1h' }); // Use expiresIn option

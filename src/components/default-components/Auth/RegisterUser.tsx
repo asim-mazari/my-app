@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 
 interface RegisterUsers {
-  setRegister_User: any;
+  setRegisterUser: any;
 }
 const initialFormData = {
   FirstName: "",
@@ -16,9 +16,9 @@ const initialFormData = {
   password: "",
   dob: "",
   Address: "",
-  ConfirmPassword:""
+  ConfirmPassword: "",
 };
-function RegisterUser({ setRegister_User }: RegisterUsers) {
+function RegisterUser({ setRegisterUser }: RegisterUsers) {
   const [formData, setFormData] = useState({
     FirstName: "",
     Lastname: "",
@@ -26,11 +26,10 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
     password: "",
     dob: "",
     Address: "",
-    ConfirmPassword:""
+    ConfirmPassword: "",
   });
   const [emailError, setEmailError] = useState("");
-
-  const handleInputChange = (event: any) => {
+  const inputChange = (event: any) => {
     const { name, value } = event.target;
     if (name === "Email") {
       setEmailError("");
@@ -39,11 +38,7 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
       ...prevData,
       [name]: value,
     }));
-
-   
   };
-
- 
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -66,23 +61,23 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
         setFormData(initialFormData);
       } else {
         // Registration failed, handle the error.
-        setEmailError("Email Alrady Exist.")
+        setEmailError("Email Alrady Exist.");
       }
     } catch (error) {
       console.error("Error registering user:", error);
     }
   };
   function SwitchTologin() {
-    setRegister_User("login");
+    setRegisterUser("login");
   }
 
   const [showPassword, setShowPassword] = React.useState(false);
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
- 
-  const [ConfirmPassword, setConfirmPassword] = React.useState(false);
+  const clickShowPassword = () => setShowPassword((show) => !show);
 
-  const ClickSConfirmhowPassword = () => setConfirmPassword((show) => !show);
+  const [confirmPassword, setConfirmPassword] = React.useState(false);
+
+  const confirmShowPassword = () => setConfirmPassword((show) => !show);
 
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>
@@ -102,7 +97,7 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
                 name="FirstName"
                 required
                 value={formData.FirstName}
-                onChange={handleInputChange}
+                onChange={inputChange}
                 margin="normal"
                 sx={{ width: "48%" }}
               />
@@ -112,7 +107,7 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
                 name="Lastname"
                 required
                 value={formData.Lastname}
-                onChange={handleInputChange}
+                onChange={inputChange}
                 margin="normal"
                 sx={{ width: "48%" }}
               />
@@ -124,16 +119,11 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
               name="Email"
               required
               value={formData.Email}
-              onChange={handleInputChange}
+              onChange={inputChange}
               fullWidth
               margin="normal"
-              error={emailError!==""}
-              helperText={
-                emailError
-                  ? emailError
-                  : ""
-              }
-             
+              error={emailError !== ""}
+              helperText={emailError ? emailError : ""}
             />
             <TextField
               label="Address"
@@ -141,7 +131,7 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
               name="Address"
               required
               value={formData.Address}
-              onChange={handleInputChange}
+              onChange={inputChange}
               fullWidth
               margin="normal"
             />
@@ -152,7 +142,7 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
               name="dob"
               required
               value={formData.dob}
-              onChange={handleInputChange}
+              onChange={inputChange}
               fullWidth
               margin="normal"
             />
@@ -163,7 +153,7 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
               name="password"
               required
               value={formData.password}
-              onChange={handleInputChange}
+              onChange={inputChange}
               fullWidth
               margin="normal"
               InputProps={{
@@ -171,7 +161,7 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
+                      onClick={clickShowPassword}
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
@@ -183,12 +173,12 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
             />
             <TextField
               label="Confirm Password"
-              type={ConfirmPassword ? "text" : "password"}
+              type={confirmPassword ? "text" : "password"}
               variant="outlined"
               name="ConfirmPassword"
               required
               value={formData.ConfirmPassword}
-              onChange={handleInputChange}
+              onChange={inputChange}
               fullWidth
               margin="normal"
               error={formData.password !== formData.ConfirmPassword}
@@ -202,11 +192,11 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
-                      onClick={ClickSConfirmhowPassword}
+                      onClick={confirmShowPassword}
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
-                      {ConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                      {confirmPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -223,7 +213,10 @@ function RegisterUser({ setRegister_User }: RegisterUsers) {
           </form>
           <Link
             component="button"
-            variant="body2" onClick={SwitchTologin} sx={{ marginTop: "20px",textDecoration:'none' }}>
+            variant="body2"
+            onClick={SwitchTologin}
+            sx={{ marginTop: "20px", textDecoration: "none" }}
+          >
             Already registered? Click here to log in.
           </Link>
         </Paper>
