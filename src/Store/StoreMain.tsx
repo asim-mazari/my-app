@@ -4,6 +4,7 @@ import countryReducer from "./CountryClice";
 import GalleryReducer from "./GalleryClice"
 import { loadState, saveState } from "./localStorage";
 
+
 const persistedState = loadState();
 
 const StoreMain = configureStore({
@@ -11,6 +12,7 @@ const StoreMain = configureStore({
     users: userReducer,
     countries: countryReducer,
     Gallery:GalleryReducer,
+  
   },
   preloadedState: persistedState, // Move preloadedState out of the reducer object
 });

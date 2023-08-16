@@ -6,6 +6,9 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 
+import { useDispatch, useSelector } from 'react-redux';
+import { loginAsync } from '../../../Store/authSlice';
+
 interface LoginUsers {
   setRegisterUser: any;
 }
@@ -15,6 +18,9 @@ function LoginUser({ setRegisterUser }: LoginUsers) {
     email: "",
     password: "",
   });
+
+  const dispatch = useDispatch();
+
   const [passwordError, setPasswordError] = useState("");
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
