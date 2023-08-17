@@ -24,7 +24,6 @@ export class AuthController {
     // Generate a JWT token with a 1-minute expiration
     const payload = { sub: user.id };
     const token = this.jwtService.sign(payload, { expiresIn: '1h' }); // Use expiresIn option
-
     return { message: 'Login successful', token };
   }
 
