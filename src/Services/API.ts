@@ -21,3 +21,12 @@ export async function registerApi(formData: any) {
     throw new Error('Failed to register user. Please try again later.');
   }
 }
+export async function checkToken(tokenObject: any) {
+  const registerUser = `${baseUrl}/auth/check-token`;
+  try {
+    const response = await axios.post(registerUser, tokenObject);
+    return response.data;
+  } catch (error) {
+    throw new Error('Incorrect token. Please try again later.');
+  }
+}

@@ -1,6 +1,21 @@
-import React from "react";
-import { AppBar, Toolbar, IconButton, Typography } from "@mui/material";
-import { Menu as MenuIcon, Close as CloseIcon } from "@mui/icons-material";
+import React, { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Button,
+  Menu,
+  MenuItem,
+  Grid,
+} from "@mui/material";
+import {
+  Menu as MenuIcon,
+  Close as CloseIcon,
+  MoreVert,
+} from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
+import { clearAuth } from "../../Store/authSlice";
 
 interface AppBarProps {
   open: boolean;
@@ -13,6 +28,25 @@ const CustomAppBar: React.FC<AppBarProps> = ({
   handleDrawerToggle,
   SelectedComponent,
 }) => {
+  const dispatch = useDispatch();
+  const authData = useSelector((state: any) => state.auth);
+  const { userId, userFirstName, userEmail, userlastName } =
+    authData.auth || {};
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  console.log(userlastName);
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    dispatch(clearAuth());
+  };
+
   return (
     <AppBar
       position="fixed"
@@ -32,14 +66,40 @@ const CustomAppBar: React.FC<AppBarProps> = ({
             mr: 3,
             display: "block",
             borderRadius: "48%", // Set the borderRadius to '50%' to create a circular shape
-             // Add a box shadow for the circular effect
+            // Add a box shadow for the circular effect
           }}
         >
-          {open ? <CloseIcon /> : <MenuIcon />} {/* Use the open prop to conditionally render the appropriate icon */}
+          {open ? <CloseIcon /> : <MenuIcon />}{" "}
+          {/* Use the open prop to conditionally render the appropriate icon */}
         </IconButton>
         <Typography variant="h6" noWrap component="div">
           {SelectedComponent}
         </Typography>
+        <div style={{ marginLeft: "auto", display: "flex" }}>
+          <Typography sx={{ marginRight: 2, marginTop: "7px" }}>
+            {userFirstName && userlastName
+              ? `${userFirstName} ${userlastName}`
+              : ""}
+          </Typography>
+          <IconButton
+            color="inherit"
+            aria-label="menu"
+            aria-controls="menu"
+            aria-haspopup="true"
+            onClick={handleMenuOpen}
+          >
+            <MoreVert />
+          </IconButton>
+          <Menu
+            id="menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          </Menu>
+        </div>
       </Toolbar>
     </AppBar>
   );

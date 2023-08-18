@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import RegisterUser from "./RegisterUser";
 import LoginUser from "./LoginUser";
 import Main from "../../Main";
-
+import { useDispatch } from "react-redux";
 function AuthMain() {
   const [registerUser, setRegisterUser] = useState("login");
-
+  const [userToken, setuserToken] = useState("");
   return (
     <>
       {registerUser === "register" && (
@@ -13,9 +13,8 @@ function AuthMain() {
       )}
 
       {registerUser === "login" && (
-        <LoginUser setRegisterUser={setRegisterUser}></LoginUser>
+        <LoginUser setRegisterUser={setRegisterUser} setuserToken={setuserToken}></LoginUser>
       )}
-
       {registerUser === "main" && <Main></Main>}
     </>
   );

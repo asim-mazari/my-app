@@ -55,6 +55,7 @@ function RegisterUser({ setRegisterUser }: RegisterUsers) {
         if(type=="auth/register/fulfilled")
         {
           setFormData(initialFormData);
+          setRegisterUser("login")
         }
         else{
           setEmailError("Email Already Exist")

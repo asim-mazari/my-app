@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Grid, Paper, TextField, Typography, Button } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -6,21 +6,31 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { loginUser } from "../../../Store/authSlice";
+
 
 interface LoginUsers {
   setRegisterUser: any;
+  setuserToken:any;
 }
 
-function LoginUser({ setRegisterUser }: LoginUsers) {
+function LoginUser({ setRegisterUser ,setuserToken}: LoginUsers) {
+  const authData = useSelector((state: any) => state.auth);
+  const { userId, userFirstName, userEmail ,userlastName} = authData.auth || {};
+  useEffect(() => {
+   if(userId!==undefined)
+   {
+    setRegisterUser("main");
+   }
+  
+  }, [userId, userFirstName, userEmail,userlastName]);
   const [formData, setFormData] = useState({
     Email: "",
     password: "",
   });
-
   const dispatch = useDispatch();
-
+  
   const [passwordError, setPasswordError] = useState("");
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -38,15 +48,16 @@ function LoginUser({ setRegisterUser }: LoginUsers) {
       const response = await dispatch(loginUser(formData) as any);
       const { type, payload } = response;
       if (response) {
-        if (type == "auth/login/fulfilled") {
+        if (payload.userId!==null) {
           setRegisterUser("main");
+          setuserToken(payload.token)
         }
         if (type == "auth/login/rejected") {
           setPasswordError("Invalid Credentials");
         }
+   
       }
 
-      console.log(response);
     } catch (error) {
       // Handle the error here
       if (axios.isAxiosError(error) && error.response?.status === 401) {

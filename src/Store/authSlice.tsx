@@ -5,12 +5,13 @@ interface credentialsType {
   Email: string;
   password: string;
 }
+
+
  
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (formData: credentialsType) => {
-    const request = await loginUserApi(formData);
-    const response = request.data;
+    const response = await loginUserApi(formData);
     return response;
   }
 );
@@ -23,7 +24,12 @@ const authSlice = createSlice({
     error: null as string | null, // Correctly typed as string | null
   },
   reducers: {
-    // ... other reducers ...
+    clearAuth: (state) => {
+      state.loading = false;
+      state.auth = null;
+      state.error = null;
+    },
+   
   },
   extraReducers: (builder) => {
     builder
@@ -44,5 +50,6 @@ const authSlice = createSlice({
       });
   },
 });
+export const { clearAuth } = authSlice.actions;
 
 export default authSlice.reducer;

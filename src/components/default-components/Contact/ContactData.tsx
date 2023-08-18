@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteContact } from "../../../Store/ContactClice";
+import { deleteContact } from "../../../Store/ContactSlice";
 import CountryList from "../../../Store/CountryList";
 interface ContactDataProps {
   onEdit: (user: any) => void;

@@ -25,7 +25,7 @@ import { CorsMiddleware } from './cors.middleware';
 
     JwtModule.register({
       secret: 'temporary-secret-key', // Replace with your temporary secret key
-      signOptions: { expiresIn: '1h' }, // Token expiration time
+      signOptions: { expiresIn: '1m' }, // Token expiration time
     }),
   ],
   controllers: [UsersController, AuthController],

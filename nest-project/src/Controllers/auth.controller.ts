@@ -23,29 +23,32 @@ export class AuthController {
     }
     // Generate a JWT token with a 1-minute expiration
     const payload = { sub: user.id };
-    const token = this.jwtService.sign(payload, { expiresIn: '1h' }); // Use expiresIn option
-    return { message: 'Login successful', token };
+    const token = this.jwtService.sign(payload, { expiresIn: '1m' }); // Use expiresIn option
+    const userId=user.id;
+    const userEmail=user.Email;
+    const userFirstName=user.FirstName;
+    const userlastName=user.Lastname;
+    return { message: 'Login successful', token,userId , userEmail, userFirstName,userlastName };
   }
 
+
   @Post('check-token')
-  async checkToken(@Body() { token }: { token: string }) {
-    try {
-      const decodedToken = this.jwtService.verify(token);
-      const currentTimeInSeconds = Math.floor(Date.now() / 1000);
-      if (decodedToken.exp >= currentTimeInSeconds) {
-        return { message: 'Token is valid' };
-      } else {
-        return { message: 'Token has expired' };
-      }
-    } catch (error) {
-      console.error('Token verification error:', error);
-      if (error.name === 'TokenExpiredError') {
-        return { message: 'Token has expired' };
-      }
-      throw new HttpException(
-        'Token verification failed',
-        HttpStatus.UNAUTHORIZED,
-      );
+async checkToken(@Body() { token }: { token: string }) {
+  try {
+    const decodedToken = this.jwtService.verify(token);
+    const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+    const isTokenValid = decodedToken.exp >= currentTimeInSeconds;
+    return { isValid: isTokenValid };
+  } catch (error) {
+    console.error('Token verification error:', error);
+    if (error.name === 'TokenExpiredError') {
+      return { isValid: false };
     }
+    throw new HttpException(
+      'Token verification failed',
+      HttpStatus.UNAUTHORIZED,
+    );
   }
+}
+
 }
