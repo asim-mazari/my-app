@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -16,6 +16,8 @@ import {
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { clearAuth } from "../../Store/authSlice";
+import jwt from "jsonwebtoken"; // Import jsonwebtoken library
+import { useNavigate } from "react-router-dom";
 
 interface AppBarProps {
   open: boolean;
@@ -28,12 +30,14 @@ const CustomAppBar: React.FC<AppBarProps> = ({
   handleDrawerToggle,
   SelectedComponent,
 }) => {
+  const navigate = useNavigate(); // Initialize useNavigate
   const dispatch = useDispatch();
   const authData = useSelector((state: any) => state.auth);
-  const { userId, userFirstName, userEmail, userlastName } =
+  const { userId, userFirstName, userEmail, userlastName,token  } =
     authData.auth || {};
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  console.log(userlastName);
+ 
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -44,6 +48,7 @@ const CustomAppBar: React.FC<AppBarProps> = ({
   };
 
   const handleLogout = () => {
+    navigate("/login");
     dispatch(clearAuth());
   };
 

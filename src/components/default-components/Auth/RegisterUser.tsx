@@ -7,9 +7,8 @@ import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import { registerUser } from "../../../Store/registerSlice";
 import { useDispatch } from "react-redux";
-interface RegisterUsers {
-  setRegisterUser: any;
-}
+import { useNavigate } from "react-router-dom";
+
 const initialFormData = {
   FirstName: "",
   Lastname: "",
@@ -19,7 +18,8 @@ const initialFormData = {
   Address: "",
   ConfirmPassword: "",
 };
-function RegisterUser({ setRegisterUser }: RegisterUsers) {
+function RegisterUser() {
+  const navigate = useNavigate(); // Initialize useNavigate
   const [formData, setFormData] = useState({
     FirstName: "",
     Lastname: "",
@@ -52,13 +52,11 @@ function RegisterUser({ setRegisterUser }: RegisterUsers) {
       const response = await dispatch(registerUser(formData) as any);
       if (response) {
         const { type, payload } = response;
-        if(type=="auth/register/fulfilled")
-        {
+        if (type == "auth/register/fulfilled") {
           setFormData(initialFormData);
-          setRegisterUser("login")
-        }
-        else{
-          setEmailError("Email Already Exist")
+          navigate("/login");
+        } else {
+          setEmailError("Email Already Exist");
         }
       }
     } catch (error) {
@@ -67,7 +65,7 @@ function RegisterUser({ setRegisterUser }: RegisterUsers) {
     }
   };
   function SwitchTologin() {
-    setRegisterUser("login");
+    navigate("/login");
   }
 
   const [showPassword, setShowPassword] = React.useState(false);

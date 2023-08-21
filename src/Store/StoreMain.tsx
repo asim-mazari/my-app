@@ -14,7 +14,6 @@ const StoreMain = configureStore({
     countries: countryReducer,
     Gallery:GalleryReducer,
     auth: authReducer,
-  
   },
   preloadedState: persistedState, // Move preloadedState out of the reducer object
 });

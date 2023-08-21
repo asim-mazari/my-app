@@ -8,7 +8,6 @@ import {
 import { UsersService } from '../Services/users.service';
 import { LoginDto } from '../dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
-
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -24,31 +23,35 @@ export class AuthController {
     // Generate a JWT token with a 1-minute expiration
     const payload = { sub: user.id };
     const token = this.jwtService.sign(payload, { expiresIn: '1m' }); // Use expiresIn option
-    const userId=user.id;
-    const userEmail=user.Email;
-    const userFirstName=user.FirstName;
-    const userlastName=user.Lastname;
-    return { message: 'Login successful', token,userId , userEmail, userFirstName,userlastName };
+    const userId = user.id;
+    const userEmail = user.Email;
+    const userFirstName = user.FirstName;
+    const userlastName = user.Lastname;
+    return {
+      message: 'Login successful',
+      token,
+      userId,
+      userEmail,
+      userFirstName,
+      userlastName,
+    };
   }
-
-
   @Post('check-token')
-async checkToken(@Body() { token }: { token: string }) {
-  try {
-    const decodedToken = this.jwtService.verify(token);
-    const currentTimeInSeconds = Math.floor(Date.now() / 1000);
-    const isTokenValid = decodedToken.exp >= currentTimeInSeconds;
-    return { isValid: isTokenValid };
-  } catch (error) {
-    console.error('Token verification error:', error);
-    if (error.name === 'TokenExpiredError') {
-      return { isValid: false };
+  async checkToken(@Body() { token }: { token: string }) {
+    try {
+      const decodedToken = this.jwtService.verify(token);
+      const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+      const isTokenValid = decodedToken.exp >= currentTimeInSeconds;
+      return { isValid: isTokenValid };
+    } catch (error) {
+      console.error('Token verification error:', error);
+      if (error.name === 'TokenExpiredError') {
+        return { isValid: false };
+      }
+      throw new HttpException(
+        'Token verification failed',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
-    throw new HttpException(
-      'Token verification failed',
-      HttpStatus.UNAUTHORIZED,
-    );
   }
-}
-
 }

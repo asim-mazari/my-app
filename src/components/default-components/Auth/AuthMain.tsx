@@ -1,21 +1,19 @@
-import React, { useState , useEffect } from "react";
+import React from "react";
 import RegisterUser from "./RegisterUser";
 import LoginUser from "./LoginUser";
 import Main from "../../Main";
-import { useDispatch } from "react-redux";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 function AuthMain() {
-  const [registerUser, setRegisterUser] = useState("login");
-  const [userToken, setuserToken] = useState("");
   return (
     <>
-      {registerUser === "register" && (
-        <RegisterUser setRegisterUser={setRegisterUser}></RegisterUser>
-      )}
-
-      {registerUser === "login" && (
-        <LoginUser setRegisterUser={setRegisterUser} setuserToken={setuserToken}></LoginUser>
-      )}
-      {registerUser === "main" && <Main></Main>}
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LoginUser></LoginUser>}></Route>
+          <Route path="/login" element={<LoginUser></LoginUser>}></Route>
+          <Route path="/signup" element={<RegisterUser></RegisterUser>}></Route>
+          <Route path="/main" element={<Main></Main>}></Route>
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }

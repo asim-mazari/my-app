@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Paper, TextField, Typography, Button } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -6,31 +6,24 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import axios from "axios";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../../Store/authSlice";
+import { useNavigate } from "react-router-dom";
 
-
-interface LoginUsers {
-  setRegisterUser: any;
-  setuserToken:any;
-}
-
-function LoginUser({ setRegisterUser ,setuserToken}: LoginUsers) {
+function LoginUser() {
+  const navigate = useNavigate(); // Initialize useNavigate
   const authData = useSelector((state: any) => state.auth);
-  const { userId, userFirstName, userEmail ,userlastName} = authData.auth || {};
-  useEffect(() => {
-   if(userId!==undefined)
-   {
-    setRegisterUser("main");
-   }
-  
-  }, [userId, userFirstName, userEmail,userlastName]);
+  const { userId } = authData.auth || {};
+  if (userId !== undefined) {
+    navigate("/main");
+  }
+
   const [formData, setFormData] = useState({
     Email: "",
     password: "",
   });
   const dispatch = useDispatch();
-  
+
   const [passwordError, setPasswordError] = useState("");
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -48,30 +41,25 @@ function LoginUser({ setRegisterUser ,setuserToken}: LoginUsers) {
       const response = await dispatch(loginUser(formData) as any);
       const { type, payload } = response;
       if (response) {
-        if (payload.userId!==null) {
-          setRegisterUser("main");
-          setuserToken(payload.token)
+        if (payload.userId !== null) {
+          navigate("/main");
         }
         if (type == "auth/login/rejected") {
           setPasswordError("Invalid Credentials");
         }
-   
       }
-
     } catch (error) {
       // Handle the error here
       if (axios.isAxiosError(error) && error.response?.status === 401) {
-        console.error("Invalid credentials:", error.response?.data.message);
         setPasswordError("Invalid email or password");
       } else {
-        console.error("Error logging in:", error);
         setPasswordError("An error occurred");
       }
     }
   };
 
   function SwitchToRegister() {
-    setRegisterUser("register");
+    navigate("/signup");
   }
   const [showPassword, setShowPassword] = React.useState(false);
   const clickShowPassword = () => setShowPassword((show) => !show);

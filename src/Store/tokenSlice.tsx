@@ -1,16 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { checkToken } from "../Services/API";
-
-interface credentialsType {
-  token: string;
-}
-
 interface AuthState {
   loading: boolean;
   isValid: boolean | null; // Store the boolean value indicating token validity
   error: string | null;
 }
-
+interface credentialsType {
+  token: string;
+}
 export const checkTokenValidation = createAsyncThunk(
   "auth/check-token",
   async (tokenObject: credentialsType) => {
@@ -18,7 +15,6 @@ export const checkTokenValidation = createAsyncThunk(
     return response.isValid; // Return the isValid property from the API response
   }
 );
-
 const tokenSlice = createSlice({
   name: "auth",
   initialState: {
@@ -40,13 +36,7 @@ const tokenSlice = createSlice({
         state.loading = false;
         state.isValid = action.payload; // Assign the isValid property
         state.error = null;
-      })
-      .addCase(checkTokenValidation.rejected, (state, action) => {
-        state.loading = false;
-        state.isValid = null;
-        state.error = action.error.message || "An error occurred";
       });
   },
 });
-
 export default tokenSlice.reducer;

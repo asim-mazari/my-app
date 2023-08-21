@@ -12,9 +12,8 @@ import {
   Settings as ServiceIcon,
   Person as PersonIcon,
   Language as WorldIcon,
-  Image as GalleryIcon
+  Image as GalleryIcon,
 } from "@mui/icons-material";
-
 interface DrawerProps {
   open: boolean;
   handleDrawerToggle: () => void;
@@ -124,9 +123,6 @@ const CustomDrawer: React.FC<DrawerProps> = ({
             </ListItemIcon>
             <ListItemText primary="Countries Accordion" />
           </ListItem>
-
-
-
           <ListItem
             button
             key="Gallery"
@@ -135,8 +131,7 @@ const CustomDrawer: React.FC<DrawerProps> = ({
               handleListItemClick("Gallery");
             }}
             sx={{
-              backgroundColor:
-                selectedItem === "Gallery" ? "#e0e0e0" : "",
+              backgroundColor: selectedItem === "Gallery" ? "#e0e0e0" : "",
             }}
           >
             <ListItemIcon>
@@ -144,13 +139,6 @@ const CustomDrawer: React.FC<DrawerProps> = ({
             </ListItemIcon>
             <ListItemText primary="Gallery" />
           </ListItem>
-
-
-     
-
-
-
-
           {/* ...other list items */}
         </List>
         {/* ...other lists */}
