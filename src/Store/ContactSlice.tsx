@@ -24,6 +24,7 @@ const userSlice = createSlice({
     },
   },
 });
+
 const CountrySlice = createSlice({
   name: "Countries",
   initialState: [] as any[],
