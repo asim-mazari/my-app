@@ -1,12 +1,12 @@
 // registerSlice.ts
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getInfo } from "../Services/API";
+import { getComapnyInfo } from "../Services/API";
 
 export const getCompanyInfo = createAsyncThunk(
   "getCompany",
   async () => {
-    const response = await getInfo();
+    const response = await getComapnyInfo();
     return response.data;
   }
 );

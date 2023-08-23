@@ -3,27 +3,27 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { companyInformation } from "../Services/API";
 
-interface userData {
+interface companyData {
     id: number;
   
-    Lable: string;
+    label: string;
   
-    FullName: string;
+    fullName: string;
   
-    Mobile: string;
+    mobile: string;
   
-    Email: string;
+    email: string;
   
-    Address: string;
+    address: string;
 
-    City: string;
+    city: string;
   
-    Country: string;
+    country: string;
 }
 
 export const addCompanyInformation = createAsyncThunk(
   "company",
-  async (data: userData) => {
+  async (data: companyData) => {
     const response = await companyInformation(data);
     return response.data;
   }

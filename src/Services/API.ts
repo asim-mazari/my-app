@@ -43,7 +43,7 @@ export async function companyInformation(data1: any) {
   }
 }
 
-export async function removeInfo(data1: any) {
+export async function removeComapnyiInfo(data1: any) {
   const companyData = `${baseUrl}/company/delete`;
   try {
     const response = await axios.delete(companyData, data1);
@@ -52,7 +52,7 @@ export async function removeInfo(data1: any) {
     throw new Error('Invalid Id Please try again later.');
   }
 }
-export async function getInfo() {
+export async function getComapnyInfo() {
   const companyData = `${baseUrl}/company/fetchinfo`;
   try {
     const response = await axios.get(companyData);

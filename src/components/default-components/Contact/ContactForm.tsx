@@ -63,7 +63,6 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
         selectedCountry: "",
         selectedCity: "",
       };
-
       setFields([...fields, newField]);
     }
   };
@@ -86,38 +85,29 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
 
         // Check if both selectedCountry and selectedCity are not empty
         if (data.selectedCountry && data.selectedCity) {
-          const data1 = {
+          const companyData = {
             id: data.id,
-
-            Lable: data.label,
-
-            FullName: data.fullName,
-
-            Mobile: data.mobile,
-
-            Email: data.email,
-
-            Address: data.address,
-
-            City: data.selectedCity,
-
-            Country: data.selectedCountry,
+            label: data.label,
+            fullName: data.fullName,
+            mobile: data.mobile,
+            email: data.email,
+            address: data.address,
+            city: data.selectedCity,
+            country: data.selectedCountry,
           };
           if (existingContact) {
             // If a contact with the same id exists, update it
             dispatch(editContact(data)); // Dispatch the action with the updated data
             setAddInfo(false);
             const companyResponse = dispatch(
-              addCompanyInformation(data1) as any
+              addCompanyInformation(companyData) as any
             );
           } else {
             // If a contact with the same id doesn't exist, add it
             dispatch(addContact(data)); // Assuming you have defined the 'addContact' action in the Redux slice
             setAddInfo(false);
-
-           
             const companyResponse = dispatch(
-              addCompanyInformation(data1) as any
+              addCompanyInformation(companyData) as any
             );
           }
         } else {
@@ -139,7 +129,6 @@ function ContactForm({ fields, setFields }: ContactFormProps) {
     <>
       <Box>
         <Grid display="flex" justifyContent="space-between">
-          
           {!AddInfo && (
             <ContactData
               onEdit={handleEditUser}

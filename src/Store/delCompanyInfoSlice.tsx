@@ -1,20 +1,18 @@
 // registerSlice.ts
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { removeInfo } from "../Services/API";
+import { removeComapnyiInfo } from "../Services/API";
 
 interface companyId {
     id: number;
 }
-
 export const delCompanyInfo = createAsyncThunk(
   "DeleteInfo",
   async (data: companyId) => {
-    const response = await removeInfo(data);
+    const response = await removeComapnyiInfo(data);
     return response.data;
   }
 );
-
 const delCompanyInfoSlice = createSlice({
   name: "Delete",
   initialState: {

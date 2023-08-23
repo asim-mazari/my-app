@@ -1,19 +1,19 @@
 
 export class companyInformationDto {
-    id: number;
+  id: number;
   
-    Lable: string;
-  
-    FullName: string;
-  
-    Mobile: string;
-  
-    Email: string;
-  
-    Address: string;
+  label: string;
 
-    City: string;
-  
-    Country: string;
+  fullName: string;
+
+  mobile: string;
+
+  email: string;
+
+  address: string;
+
+  city: string;
+
+  country: string;
   }
   

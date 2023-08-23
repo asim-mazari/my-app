@@ -7,22 +7,22 @@ export class CompanyInformation {
   id: number;
 
   @Column()
-  Lable: string;
+  label: string;
   
   @Column()
-  FullName: string;
+  fullName: string;
   
   @Column()
-  Mobile: string;
+  mobile: string;
   @Column()
-  Email: string;
+  email: string;
 
   @Column()
-  Address: string;
+  address: string;
 
   @Column()
-  City: string;
+  city: string;
 
   @Column()
-  Country: string;
+  country: string;
 }

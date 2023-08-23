@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Table,
@@ -22,36 +22,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { deleteContact } from "../../../Store/ContactSlice";
 import CountryList from "../../../Store/CountryList";
 import { delCompanyInfo } from "../../../Store/delCompanyInfoSlice";
-import { getCompanyInfo } from "../../../Store/getCompInfoSlice";
 interface ContactDataProps {
   onEdit: (user: any) => void;
   setAddInfo: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function ContactData({ onEdit, setAddInfo }: ContactDataProps) {
-  const [myArray, setMyArray] = useState([]);
   const dispatch = useDispatch();
   const data = useSelector((state: any) => {
     return state.users;
   });
-
-
-  useEffect(() => {
-    async function fetchCompanyInfo() {
-      try {
-        const getInfo = await dispatch(getCompanyInfo() as any);
-        setMyArray(getInfo.payload);
-      } catch (error) {
-        // Handle errors
-        console.error('Error fetching company information:', error);
-      }
-    }
-    fetchCompanyInfo(); // Call the async function
-  }, []); // Empty dependency array to execute the effect only once
-
-
-
-  
   // Local state to store the selected value from Autocomplete and sorting option
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
   const [sortingOption, setSortingOption] = useState<string>("id");
