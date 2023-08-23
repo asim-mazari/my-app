@@ -9,12 +9,10 @@ import CountriesAccordion from "./CountriesData/CountriesAccordion";
 import ManageCities from "./CountriesData/ManageCities";
 import Gallery from "./Gallery/Gallery";
 import ManageGallery from "./Gallery/ManageGallery";
-
 interface ContentContainerProps {
   open: boolean;
   SelectedComponent: any;
 }
-
 const ContentContainer: React.FC<ContentContainerProps> = ({
   open,
   SelectedComponent,
@@ -40,8 +38,6 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
   const [ArrayIndex, setArrayIndex] = useState(0);
   const [Managegallery, setManagegallery] = useState(false);
   const [GalleryIndex, setGalleryIndex] = useState(0);
- 
-
   return (
     <Box
       component="main"

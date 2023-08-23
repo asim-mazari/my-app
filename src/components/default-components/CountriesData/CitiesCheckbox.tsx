@@ -3,10 +3,10 @@ import { Box, Paper, Typography, Checkbox, Grid, Button } from "@mui/material";
 import ShortCountryList from "../../../Store/ShortCountryList";
 import cities from "cities.json";
 import City from "./City";
-import { addCountries } from "../../../Store/ContactClice";
+import { addCountries } from "../../../Store/ContactSlice";
 import { useSelector, useDispatch } from "react-redux";
 
-import { editCountry, deleteCountry } from "../../../Store/CountryClice";
+import { editCountry, deleteCountry } from "../../../Store/CountrySlice";
 
 interface ManageCities {
   setManageCity: React.Dispatch<React.SetStateAction<boolean>>;

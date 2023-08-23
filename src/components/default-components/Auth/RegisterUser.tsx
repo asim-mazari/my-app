@@ -5,10 +5,10 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
+import { registerUser } from "../../../Store/registerSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-interface RegisterUsers {
-  setRegisterUser: any;
-}
 const initialFormData = {
   FirstName: "",
   Lastname: "",
@@ -18,7 +18,8 @@ const initialFormData = {
   Address: "",
   ConfirmPassword: "",
 };
-function RegisterUser({ setRegisterUser }: RegisterUsers) {
+function RegisterUser() {
+  const navigate = useNavigate(); // Initialize useNavigate
   const [formData, setFormData] = useState({
     FirstName: "",
     Lastname: "",
@@ -28,6 +29,7 @@ function RegisterUser({ setRegisterUser }: RegisterUsers) {
     Address: "",
     ConfirmPassword: "",
   });
+  const dispatch = useDispatch();
   const [emailError, setEmailError] = useState("");
   const inputChange = (event: any) => {
     const { name, value } = event.target;
@@ -40,35 +42,30 @@ function RegisterUser({ setRegisterUser }: RegisterUsers) {
     }));
   };
 
-  const handleSubmit = async (event: any) => {
+  const submitUserData = async (event: any) => {
     event.preventDefault();
     if (formData.password !== formData.ConfirmPassword) {
       alert("Passwords do not match");
       return;
     }
     try {
-      const response = await fetch("http://localhost:3000/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        // Registration successful, you can display a success message or redirect the user.
-        alert("User registerd");
-        setFormData(initialFormData);
-      } else {
-        // Registration failed, handle the error.
-        setEmailError("Email Alrady Exist.");
+      const response = await dispatch(registerUser(formData) as any);
+      if (response) {
+        const { type, payload } = response;
+        if (type == "auth/register/fulfilled") {
+          setFormData(initialFormData);
+          navigate("/login");
+        } else {
+          setEmailError("Email Already Exist");
+        }
       }
     } catch (error) {
       console.error("Error registering user:", error);
+      // Handle the error here, if needed
     }
   };
   function SwitchTologin() {
-    setRegisterUser("login");
+    navigate("/login");
   }
 
   const [showPassword, setShowPassword] = React.useState(false);
@@ -89,7 +86,7 @@ function RegisterUser({ setRegisterUser }: RegisterUsers) {
       <Grid item xs={12} md={6}>
         <Paper elevation={3} style={{ padding: "20px" }}>
           <Typography variant="h5">Sign Up</Typography>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={submitUserData}>
             <Grid display="flex" justifyContent="space-between">
               <TextField
                 label="First Name"

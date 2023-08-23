@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AuthMain from "./components/default-components/Auth/AuthMain";
 
 function APP() {

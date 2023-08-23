@@ -17,7 +17,7 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { v4 as uuidv4 } from "uuid";
-import { addGallery, editGallery } from "../../../Store/GalleryClice";
+import { addGallery, editGallery } from "../../../Store/GallerySlice";
 import { useSelector, useDispatch } from "react-redux";
 
 const HoverableCard = styled(Card)(({ theme }) => ({

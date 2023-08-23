@@ -6,7 +6,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import ContactData from "./ContactData";
 import { useDispatch } from "react-redux";
-import { addContact, editContact } from "../../../Store/ContactClice";
+import { addContact, editContact } from "../../../Store/ContactSlice";
 import { useSelector } from "react-redux";
 import CitiesCheckbox from "../CountriesData/CitiesCheckbox";
 

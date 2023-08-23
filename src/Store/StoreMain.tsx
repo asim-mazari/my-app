@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./ContactClice";
-import countryReducer from "./CountryClice";
-import GalleryReducer from "./GalleryClice"
+import userReducer from "./ContactSlice";
+import countryReducer from "./CountrySlice";
+import GalleryReducer from "./GallerySlice"
 import { loadState, saveState } from "./localStorage";
+import authReducer from './authSlice';
+
 
 const persistedState = loadState();
 
@@ -11,6 +13,7 @@ const StoreMain = configureStore({
     users: userReducer,
     countries: countryReducer,
     Gallery:GalleryReducer,
+    auth: authReducer,
   },
   preloadedState: persistedState, // Move preloadedState out of the reducer object
 });

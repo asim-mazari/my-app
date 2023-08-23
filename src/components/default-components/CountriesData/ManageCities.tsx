@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteCountry } from "../../../Store/CountryClice";
+import { deleteCountry } from "../../../Store/CountrySlice";
 import cities from "cities.json"; // Import the cities list
 
 interface ManageCities {
