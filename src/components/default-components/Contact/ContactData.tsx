@@ -29,47 +29,34 @@ interface ContactDataProps {
 }
 
 function ContactData({ onEdit, setAddInfo }: ContactDataProps) {
-  const [myArray, setMyArray] = useState([]);
   const dispatch = useDispatch();
-  const data = useSelector((state: any) => {
-    return state.users;
+  // const data = useSelector((state: any) => {
+  //   return state.users;
+  // });
+ 
+  const info = useSelector((state: any) => {
+    return state.getInfo;
   });
 
 
-  useEffect(() => {
-    async function fetchCompanyInfo() {
-      try {
-        const getInfo = await dispatch(getCompanyInfo() as any);
-        setMyArray(getInfo.payload);
-      } catch (error) {
-        // Handle errors
-        console.error('Error fetching company information:', error);
-      }
-    }
-    fetchCompanyInfo(); // Call the async function
-  }, []); // Empty dependency array to execute the effect only once
-
-
-
-  
   // Local state to store the selected value from Autocomplete and sorting option
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
   const [sortingOption, setSortingOption] = useState<string>("id");
   // Filter the data array to remove duplicates based on a unique property (e.g., 'id')
-  const filteredData = data.filter((item: any, index: number, self: any[]) => {
+  const filteredData = info.filter((item: any, index: number, self: any[]) => {
     return index === self.findIndex((obj) => obj.id === item.id);
   });
 
   const tableData = selectedValue
-    ? filteredData.filter((item: any) => item.fullName === selectedValue)
+    ? filteredData.filter((item: any) => item.FullName === selectedValue)
     : filteredData;
   // Function to sort data based on the selected sorting option
   const sortData = (data: any[]) => {
     return data.sort((a, b) => {
       if (sortingOption === "label") {
-        return a.label.localeCompare(b.label);
+        return a.Lable.localeCompare(b.Lable);
       } else if (sortingOption === "fullName") {
-        return a.fullName.localeCompare(b.fullName);
+        return a.FullName.localeCompare(b.FullName);
       }
       // Default sorting by ID
       return a.id - b.id;
@@ -127,9 +114,9 @@ function ContactData({ onEdit, setAddInfo }: ContactDataProps) {
             freeSolo
             id="free-solo-2-demo"
             disableClearable
-            options={data.map((option: any) => ({ label: option.fullName }))}
-            getOptionLabel={(option: any) => option.label}
-            onChange={(event, value) => setSelectedValue(value?.label || null)}
+            options={info.map((option: any) => ({ label: option.FullName }))}
+            getOptionLabel={(option: any) => option.Lable}
+            onChange={(event, value) => setSelectedValue(value?.Lable || null)}
             onInputChange={handleInputChange} // Handle input change
             renderInput={(params) => (
               <TextField
@@ -165,15 +152,15 @@ function ContactData({ onEdit, setAddInfo }: ContactDataProps) {
             {sortData(tableData).map((item: any) => (
               <TableRow key={item.id}>
                 <TableCell>{item.id}</TableCell>
-                <TableCell>{item.label}</TableCell>
-                <TableCell>{item.fullName}</TableCell>
-                <TableCell>{item.mobile}</TableCell>
-                <TableCell>{item.email}</TableCell>
-                <TableCell>{item.address}</TableCell>
-                <TableCell>{item.selectedCity}</TableCell>
+                <TableCell>{item.Lable}</TableCell>
+                <TableCell>{item.FullName}</TableCell>
+                <TableCell>{item.Mobile}</TableCell>
+                <TableCell>{item.Email}</TableCell>
+                <TableCell>{item.Address}</TableCell>
+                <TableCell>{item.City}</TableCell>
                 <TableCell>
                   {CountryList.find(
-                    (country) => country.code === item.selectedCountry
+                    (country) => country.code === item.Country
                   )?.name || ""}
                 </TableCell>
                 <TableCell>
