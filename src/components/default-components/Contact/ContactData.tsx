@@ -33,7 +33,7 @@ function ContactData({ onEdit, setAddInfo }: ContactDataProps) {
   //   return state.users;
   // });
  
-  const info = useSelector((state: any) => {
+  const ComapnyInfo = useSelector((state: any) => {
     return state.getInfo;
   });
 
@@ -42,7 +42,7 @@ function ContactData({ onEdit, setAddInfo }: ContactDataProps) {
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
   const [sortingOption, setSortingOption] = useState<string>("id");
   // Filter the data array to remove duplicates based on a unique property (e.g., 'id')
-  const filteredData = info.filter((item: any, index: number, self: any[]) => {
+  const filteredData = ComapnyInfo.filter((item: any, index: number, self: any[]) => {
     return index === self.findIndex((obj) => obj.id === item.id);
   });
 
@@ -113,9 +113,9 @@ function ContactData({ onEdit, setAddInfo }: ContactDataProps) {
             freeSolo
             id="free-solo-2-demo"
             disableClearable
-            options={info.map((option: any) => ({ label: option.FullName }))}
-            getOptionLabel={(option: any) => option.Lable}
-            onChange={(event, value) => setSelectedValue(value?.Lable || null)}
+            options={ComapnyInfo.map((option: any) => ({ label: option.fullName }))}
+            getOptionLabel={(option: any) => option.label}
+            onChange={(event, value) => setSelectedValue(value?.label || null)}
             onInputChange={handleInputChange} // Handle input change
             renderInput={(params) => (
               <TextField
@@ -151,15 +151,15 @@ function ContactData({ onEdit, setAddInfo }: ContactDataProps) {
             {sortData(tableData).map((item: any) => (
               <TableRow key={item.id}>
                 <TableCell>{item.id}</TableCell>
-                <TableCell>{item.Lable}</TableCell>
-                <TableCell>{item.FullName}</TableCell>
-                <TableCell>{item.Mobile}</TableCell>
-                <TableCell>{item.Email}</TableCell>
-                <TableCell>{item.Address}</TableCell>
-                <TableCell>{item.City}</TableCell>
+                <TableCell>{item.label}</TableCell>
+                <TableCell>{item.fullName}</TableCell>
+                <TableCell>{item.mobile}</TableCell>
+                <TableCell>{item.email}</TableCell>
+                <TableCell>{item.address}</TableCell>
+                <TableCell>{item.city}</TableCell>
                 <TableCell>
                   {CountryList.find(
-                    (country) => country.code === item.Country
+                    (country) => country.code === item.country
                   )?.name || ""}
                 </TableCell>
                 <TableCell>
