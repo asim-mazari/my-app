@@ -17,9 +17,6 @@ function Main() {
   const dispatch = useDispatch();
   const authData = useSelector((state: any) => state.auth);
   const { token } = authData.auth || {};
-  
-
-
   useEffect(() => {
     const trackToken = async () => {
       const tokenObject = { token: token };
@@ -40,9 +37,11 @@ function Main() {
       document.removeEventListener("click", trackToken);
     };
   }, []);
+
   const [SelectedComponent, setSelectedComponent] = useState(
     "Company Information"
   );
+
   const theme = createTheme({});
   return (
     <ThemeProvider theme={theme}>

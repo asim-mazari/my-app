@@ -21,7 +21,6 @@ export async function registerApi(formData: any) {
     throw new Error('Failed to register user. Please try again later.');
   }
 }
-
 export async function checkToken(tokenObject: any) {
   const registerUser = `${baseUrl}/auth/check-token`;
   try {
@@ -31,34 +30,3 @@ export async function checkToken(tokenObject: any) {
     throw new Error('Incorrect token. Please try again later.');
   }
 }
-
-
-export async function companyInformation(data1: any) {
-  const companyData = `${baseUrl}/company`;
-  try {
-    const response = await axios.post(companyData, data1);
-    return response.data;
-  } catch (error) {
-    throw new Error(' Please try again later.');
-  }
-}
-
-export async function removeInfo(data1: any) {
-  const companyData = `${baseUrl}/company/delete`;
-  try {
-    const response = await axios.delete(companyData, data1);
-    return response.data;
-  } catch (error) {
-    throw new Error('Invalid Id Please try again later.');
-  }
-}
-export async function getInfo() {
-  const companyData = `${baseUrl}/company/fetchinfo`;
-  try {
-    const response = await axios.get(companyData);
-    return response.data;
-  } catch (error:any) {
-    throw new Error(error.response?.data?.message || 'Please try again later.');
-  }
-}
-

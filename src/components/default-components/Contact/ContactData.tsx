@@ -1,5 +1,6 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import {
+  Box,
   Grid,
   Table,
   TableBody,
@@ -21,48 +22,31 @@ import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteContact } from "../../../Store/ContactSlice";
 import CountryList from "../../../Store/CountryList";
-import { delCompanyInfo } from "../../../Store/delCompanyInfoSlice";
-import { getCompanyInfo } from "../../../Store/getCompInfoSlice";
 interface ContactDataProps {
   onEdit: (user: any) => void;
   setAddInfo: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function ContactData({ onEdit, setAddInfo }: ContactDataProps) {
-  const [myArray, setMyArray] = useState([]);
-  const dispatch = useDispatch();
   const data = useSelector((state: any) => {
     return state.users;
   });
+  const dispatch = useDispatch();
 
-
-  useEffect(() => {
-    async function fetchCompanyInfo() {
-      try {
-        const getInfo = await dispatch(getCompanyInfo() as any);
-        setMyArray(getInfo.payload);
-      } catch (error) {
-        // Handle errors
-        console.error('Error fetching company information:', error);
-      }
-    }
-    fetchCompanyInfo(); // Call the async function
-  }, []); // Empty dependency array to execute the effect only once
-
-
-
-  
   // Local state to store the selected value from Autocomplete and sorting option
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
   const [sortingOption, setSortingOption] = useState<string>("id");
+
   // Filter the data array to remove duplicates based on a unique property (e.g., 'id')
   const filteredData = data.filter((item: any, index: number, self: any[]) => {
     return index === self.findIndex((obj) => obj.id === item.id);
   });
 
+  // If Autocomplete has a selected value, filter the data based on the selected value
   const tableData = selectedValue
     ? filteredData.filter((item: any) => item.fullName === selectedValue)
     : filteredData;
+
   // Function to sort data based on the selected sorting option
   const sortData = (data: any[]) => {
     return data.sort((a, b) => {
@@ -75,6 +59,7 @@ function ContactData({ onEdit, setAddInfo }: ContactDataProps) {
       return a.id - b.id;
     });
   };
+
   const handleInputChange = (event: React.ChangeEvent<{}>, value: string) => {
     // If the input is empty, reset the selectedValue to show all data in the table
     if (value === "") {
@@ -83,14 +68,11 @@ function ContactData({ onEdit, setAddInfo }: ContactDataProps) {
   };
 
   // Function to handle the deletion of data
-  const handleDelete = async (id: number) => {
+  const handleDelete = (id: number) => {
+    // Dispatch the action to remove the user from the Redux store
     dispatch(deleteContact(id));
-    const data = { id: id };
-    const delResponse = await dispatch(delCompanyInfo(data) as any);
-    if (delResponse.type == "DeleteInfo/fulfilled") {
-      alert("Company Info Removed");
-    }
   };
+
   const handleEdit = (user: any) => {
     onEdit(user);
     setAddInfo(true);
@@ -98,6 +80,7 @@ function ContactData({ onEdit, setAddInfo }: ContactDataProps) {
   function AddContactInfo() {
     setAddInfo(true);
   }
+
   return (
     <Grid sx={{ width: "100%" }} display="flex" justifyContent="center">
       <Paper
@@ -142,6 +125,7 @@ function ContactData({ onEdit, setAddInfo }: ContactDataProps) {
               />
             )}
           />
+
           <Button variant="outlined" onClick={AddContactInfo}>
             Add Info
           </Button>

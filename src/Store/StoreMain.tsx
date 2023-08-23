@@ -4,7 +4,6 @@ import countryReducer from "./CountrySlice";
 import GalleryReducer from "./GallerySlice"
 import { loadState, saveState } from "./localStorage";
 import authReducer from './authSlice';
-import getInfoReducer from './getCompInfoSlice'
 
 
 const persistedState = loadState();
@@ -15,7 +14,6 @@ const StoreMain = configureStore({
     countries: countryReducer,
     Gallery:GalleryReducer,
     auth: authReducer,
-    getInfo:getInfoReducer,
   },
   preloadedState: persistedState, // Move preloadedState out of the reducer object
 });

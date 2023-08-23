@@ -7,10 +7,6 @@ import { UsersService } from './Services/users.service';
 import { AuthController } from './Controllers/auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { CorsMiddleware } from './cors.middleware';
-import {CompanyInformation} from './entity/companyInformation';
-
-import {CompanyController} from './Controllers/Company.controller';
-import {companyServices} from './Services/companyservice';
 
 
 @Module({
@@ -22,22 +18,18 @@ import {companyServices} from './Services/companyservice';
       username: 'root',
       password: '',
       database: 'users',
-      entities: [Users, ContactDetails,CompanyInformation],
+      entities: [Users, ContactDetails],
       synchronize: true,
     }),
     TypeOrmModule.forFeature([Users]),
-    TypeOrmModule.forFeature([CompanyInformation]),
 
     JwtModule.register({
       secret: 'temporary-secret-key', // Replace with your temporary secret key
-      signOptions: { expiresIn: '2h' }, // Token expiration time
+      signOptions: { expiresIn: '1m' }, // Token expiration time
     }),
   ],
-  
-  controllers: [CompanyController,UsersController, AuthController, ],
-  providers: [UsersService, companyServices],
-
-
+  controllers: [UsersController, AuthController],
+  providers: [UsersService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
