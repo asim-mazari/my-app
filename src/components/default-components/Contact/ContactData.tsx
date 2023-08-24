@@ -28,10 +28,20 @@ interface ContactDataProps {
 }
 
 function ContactData({ onEdit, setAddInfo }: ContactDataProps) {
+<<<<<<< Updated upstream
   const data = useSelector((state: any) => {
     return state.users;
   });
   const dispatch = useDispatch();
+=======
+  const dispatch = useDispatch();
+  const data = useSelector((state: any) => {
+    return state.users;
+  });
+ 
+ 
+
+>>>>>>> Stashed changes
 
   // Local state to store the selected value from Autocomplete and sorting option
   const [selectedValue, setSelectedValue] = useState<string | null>(null);

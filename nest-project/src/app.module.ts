@@ -7,10 +7,23 @@ import { UsersService } from './Services/users.service';
 import { AuthController } from './Controllers/auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { CorsMiddleware } from './cors.middleware';
+<<<<<<< Updated upstream
+=======
+import {CompanyInformation} from './entity/companyInformation';
+
+import {CompanyController} from './Controllers/Company.controller';
+import {companyServices} from './Services/company.service';
+
+import {EmailService} from './Services/email.service'
+import {EmailController} from './Controllers/email.controller'
+import { ConfigModule } from '@nestjs/config';
+
+>>>>>>> Stashed changes
 
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -28,8 +41,16 @@ import { CorsMiddleware } from './cors.middleware';
       signOptions: { expiresIn: '1m' }, // Token expiration time
     }),
   ],
+<<<<<<< Updated upstream
   controllers: [UsersController, AuthController],
   providers: [UsersService],
+=======
+  
+  controllers: [CompanyController,UsersController, AuthController,EmailController ],
+  providers: [UsersService, companyServices,EmailService],
+
+
+>>>>>>> Stashed changes
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
